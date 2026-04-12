@@ -1,0 +1,4 @@
+name: CI_5
+version: '1.0-SNAPSHOT'
+main: at.cyber.cI_5.CI_5
+api-version: '1.21'
