@@ -1,0 +1,23 @@
+name: CyberInfra
+version: '1.0-SNAPSHOT'
+main: at.zFrezze.cyberInfra.CyberInfra
+api-version: '1.21'
+commands:
+  token:
+    description: Manage player tokens
+    usage: /token info|set|add|remove <player> [amount]
+    aliases: [tokens, tk]
+  withdraw:
+    description: Withdraw tokens from your balance
+    usage: /withdraw <amount>
+    aliases: wd
+permissions:
+  ci.admin:
+    description: Full admin access
+    default: op
+  ci.tokens.admin:
+    description: Manage tokens (set/add/remove)
+    default: op
+  ci.tokens.others:
+    description: View other players' tokens
+    default: op
