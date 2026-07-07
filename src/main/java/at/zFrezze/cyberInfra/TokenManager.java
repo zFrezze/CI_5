@@ -30,17 +30,32 @@ public class TokenManager {
 
     public boolean withdrawToken(UUID uuid, Player player, int withdrawAmount) {
         int amount = token.getOrDefault(uuid, 0);
-        if (withdrawAmount <= amount && withdrawAmount > 0 && withdrawAmount <= 64) {
-            if (player.getInventory().firstEmpty() != -1) {
-                token.put(uuid, amount - withdrawAmount);
-                ItemStack token = TokenCraft.getTokenHead();
-                token.setAmount(withdrawAmount);
-                player.getInventory().addItem(token);
-                return true;
-            }
+        if (withdrawAmount <= 0 || withdrawAmount > amount) {
             return false;
         }
-        return false;
+
+        int neededSlots = (withdrawAmount + 63) / 64;
+        int freeSlots = 0;
+        for (ItemStack content : player.getInventory().getStorageContents()) {
+            if (content == null || content.getType().isAir()) {
+                freeSlots++;
+            }
+        }
+        if (freeSlots < neededSlots) {
+            return false;
+        }
+
+        token.put(uuid, amount - withdrawAmount);
+
+        int remaining = withdrawAmount;
+        while (remaining > 0) {
+            int stackSize = Math.min(64, remaining);
+            ItemStack head = TokenCraft.getTokenHead();
+            head.setAmount(stackSize);
+            player.getInventory().addItem(head);
+            remaining -= stackSize;
+        }
+        return true;
     }
 
     public int getToken(UUID uuid) {return token.getOrDefault(uuid, 0);}
