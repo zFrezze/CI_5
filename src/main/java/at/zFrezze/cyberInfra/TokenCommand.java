@@ -16,11 +16,9 @@ import java.util.List;
 
 public class TokenCommand implements CommandExecutor, TabCompleter {
 
-    private final TokenManager tokenManager;
+    private final PlayerManager playerManager;
 
-    public TokenCommand(TokenManager tokenManager) {
-        this.tokenManager = tokenManager;
-    }
+    public TokenCommand(PlayerManager playerManager) {this.playerManager = playerManager;}
 
     private Integer parseAmount(String arg) {
         try {
@@ -44,7 +42,7 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
             switch (args[0].toLowerCase()) {
 
                 case "info" -> {
-                    int amount = tokenManager.getToken(target.getUniqueId());
+                    int amount = playerManager.getToken(target.getUniqueId());
                     Bukkit.getLogger().info(target.getName() + " has " + amount + " tokens.");
                 }
 
@@ -59,9 +57,9 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     switch (args[0].toLowerCase()) {
-                        case "set" -> tokenManager.setToken(target.getUniqueId(), amount);
-                        case "add" -> tokenManager.addToken(target.getUniqueId(), amount);
-                        case "remove" -> tokenManager.removeToken(target.getUniqueId(), amount);
+                        case "set" -> playerManager.setToken(target.getUniqueId(), amount);
+                        case "add" -> playerManager.addToken(target.getUniqueId(), amount);
+                        case "remove" -> playerManager.removeToken(target.getUniqueId(), amount);
                     }
                     Bukkit.getLogger().info(args[0].toLowerCase() + " done for " + target.getName() + " (" + amount + ").");
                 }
@@ -73,7 +71,7 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 0) {
-            int amount = tokenManager.getToken(player.getUniqueId());
+            int amount = playerManager.getToken(player.getUniqueId());
             player.sendMessage("You have " + ChatColor.GREEN + amount + ChatColor.WHITE + " tokens.");
             return true;
         }
@@ -83,10 +81,10 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
             case "info" -> {
                 if (args.length >= 2 && player.hasPermission("ci.tokens.others")) {
                     OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
-                    int amount = tokenManager.getToken(target.getUniqueId());
+                    int amount = playerManager.getToken(target.getUniqueId());
                     player.sendMessage(target.getName() + " has " + ChatColor.GREEN + amount + ChatColor.WHITE + " tokens.");
                 } else {
-                    int amount = tokenManager.getToken(player.getUniqueId());
+                    int amount = playerManager.getToken(player.getUniqueId());
                     player.sendMessage("You have " + ChatColor.GREEN + amount + ChatColor.WHITE + " tokens.");
                 }
             }
@@ -107,16 +105,16 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
                 }
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
                 switch (args[0].toLowerCase()) {
-                    case "set" -> tokenManager.setToken(target.getUniqueId(), amount);
-                    case "add" -> tokenManager.addToken(target.getUniqueId(), amount);
-                    case "remove" -> tokenManager.removeToken(target.getUniqueId(), amount);
+                    case "set" -> playerManager.setToken(target.getUniqueId(), amount);
+                    case "add" -> playerManager.addToken(target.getUniqueId(), amount);
+                    case "remove" -> playerManager.removeToken(target.getUniqueId(), amount);
                 }
                 player.sendMessage(ChatColor.GREEN + args[0].toLowerCase() + " done for " + target.getName() + " (" + amount + ").");
             }
 
             default -> {
                 if (!player.hasPermission("ci.admin") || !player.hasPermission("ci.tokens.admin")) {
-                    int amount = tokenManager.getToken(player.getUniqueId());
+                    int amount = playerManager.getToken(player.getUniqueId());
                     player.sendMessage("You have " + ChatColor.GREEN + amount + ChatColor.WHITE + " tokens.");
                 } else {
                     player.sendMessage(ChatColor.RED + "Invalid usage! Use /token info|set|add|remove <player> [amount]");

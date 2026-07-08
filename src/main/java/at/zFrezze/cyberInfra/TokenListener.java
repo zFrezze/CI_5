@@ -1,6 +1,5 @@
 package at.zFrezze.cyberInfra;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -29,13 +28,13 @@ public class TokenListener implements Listener {
     private static final int TOKENS_PER_CRAFT = 100;
 
     private final Plugin plugin;
-    private final TokenManager tokenManager;
+    private final PlayerManager playerManager;
 
     private final Set<UUID> readyToCraft = ConcurrentHashMap.newKeySet();
 
-    TokenListener(Plugin plugin, TokenManager tokenManager) {
+    TokenListener(Plugin plugin,PlayerManager playerManager) {
         this.plugin = plugin;
-        this.tokenManager = tokenManager;
+        this.playerManager = playerManager;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -97,7 +96,7 @@ public class TokenListener implements Listener {
         }
 
         int total = count * TOKENS_PER_CRAFT;
-        tokenManager.addToken(player.getUniqueId(), total);
+        playerManager.addToken(player.getUniqueId(), total);
         player.sendMessage("Du hast " + ChatColor.GREEN + total + " Tokens " + ChatColor.WHITE + "gecraftet");
 
         inv.setMatrix(next);
@@ -148,11 +147,11 @@ public class TokenListener implements Listener {
         if (e.getPlayer().isSneaking()) {
             item.setAmount(stackAmount - 1);
             e.getPlayer().getInventory().setItemInMainHand(item.getAmount() > 0 ? item : null);
-            tokenManager.addToken(e.getPlayer().getUniqueId(), 1);
+            playerManager.addToken(e.getPlayer().getUniqueId(), 1);
             e.getPlayer().sendMessage("Du hast " + ChatColor.GREEN + "1 Token " + ChatColor.WHITE + "eingezahlt");
         } else {
             e.getPlayer().getInventory().setItemInMainHand(null);
-            tokenManager.addToken(e.getPlayer().getUniqueId(), stackAmount);
+            playerManager.addToken(e.getPlayer().getUniqueId(), stackAmount);
             e.getPlayer().sendMessage("Du hast " + ChatColor.GREEN + stackAmount + " Tokens " + ChatColor.WHITE + "eingezahlt");
         }
     }

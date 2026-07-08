@@ -1,13 +1,15 @@
 package at.zFrezze.cyberInfra;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
+import java.util.UUID;
 
 public final class CyberInfra extends JavaPlugin {
 
-    private TokenManager tokenManager;
+    private PlayerManager playerManager;
     private Database database;
 
     @Override
@@ -24,28 +26,46 @@ public final class CyberInfra extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
+        database.createTable();
 
         getLogger().info("Database connection successful!");
 
-        this.tokenManager = new TokenManager(this);
+        this.playerManager = new PlayerManager(this);
 
-        Bukkit.getPluginManager().registerEvents(new JoinListener(tokenManager), this);
-        Bukkit.getPluginManager().registerEvents(new TokenListener(this, tokenManager), this);
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            UUID uuid = p.getUniqueId();
+            Bukkit.getScheduler().runTaskAsynchronously(this, () -> playerManager.loadPlayer(uuid));
+        }
+
+        Bukkit.getPluginManager().registerEvents(new JoinListener(this, playerManager), this);
+        Bukkit.getPluginManager().registerEvents(new TokenListener(this, playerManager), this);
 
         new TokenCraft(this).registerRecipe();
 
-        TokenCommand tokenCommand = new TokenCommand(tokenManager);
+        TokenCommand tokenCommand = new TokenCommand(playerManager);
         getCommand("token").setExecutor(tokenCommand);
         getCommand("token").setTabCompleter(tokenCommand);
 
-        WithdrawCommand withdrawCommand = new WithdrawCommand(tokenManager);
+        WithdrawCommand withdrawCommand = new WithdrawCommand(playerManager);
         getCommand("withdraw").setExecutor(withdrawCommand);
         getCommand("withdraw").setTabCompleter(withdrawCommand);
 
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> playerManager.saveAll(), 6000L, 6000L);
+    }
+
+    public Database getDatabase() {
+        return database;
+    }
+
+    public PlayerManager getPlayerManager() {
+        return playerManager;
     }
 
     @Override
     public void onDisable() {
+        if (playerManager != null) {
+            playerManager.saveAll();
+        }
         database.disconnect();
     }
 }

@@ -15,10 +15,10 @@ import java.util.List;
 
 public class WithdrawCommand implements CommandExecutor, TabCompleter {
 
-    private final TokenManager tokenManager;
+    private final PlayerManager playerManager;
 
-    public WithdrawCommand(TokenManager tokenManager) {
-        this.tokenManager = tokenManager;
+    public WithdrawCommand(PlayerManager playerManager) {
+        this.playerManager = playerManager;
     }
 
     private Integer parseAmount(String arg) {
@@ -53,10 +53,10 @@ public class WithdrawCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        boolean success = tokenManager.withdrawToken(player.getUniqueId(), player, amount);
+        boolean success = playerManager.withdrawToken(player.getUniqueId(), player, amount);
 
         if (success) {
-            int remaining = tokenManager.getToken(player.getUniqueId());
+            int remaining = playerManager.getToken(player.getUniqueId());
             player.sendMessage(ChatColor.GREEN + "Withdrew " + amount + " tokens. " + ChatColor.WHITE + "Balance: " + ChatColor.GREEN + remaining);
         } else {
             player.sendMessage(ChatColor.RED + "You don't have enough tokens!");
