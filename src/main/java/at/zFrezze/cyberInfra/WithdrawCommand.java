@@ -32,40 +32,36 @@ public class WithdrawCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
 
-        if (sender instanceof Player player) {
-
-            if (args.length == 1) {
-
-                Integer amount = parseAmount(args[0]);
-                if (amount == null) {
-                    player.sendMessage(ChatColor.RED + "Invalid number: " + args[0]);
-                    return true;
-                }
-
-                if (amount <= 0) {
-                    player.sendMessage(ChatColor.RED + "Amount must be positive.");
-                } else {
-                    boolean success = tokenManager.withdrawToken(player.getUniqueId(),player, amount);
-
-
-
-
-
-                    if (success) {
-                        int remaining = tokenManager.getToken(player.getUniqueId());
-                        player.sendMessage(ChatColor.GREEN + "Withdrew " + amount + " tokens. " + ChatColor.WHITE + "Balance: " + ChatColor.GREEN + remaining);
-                    } else {
-                        player.sendMessage(ChatColor.RED + "You don't have enough tokens!");
-                    }
-                }
-
-            } else {
-                player.sendMessage(ChatColor.RED + "Usage: /withdraw <amount>");
-            }
-
-        } else {
+        if (!(sender instanceof Player player)) {
             Bukkit.getLogger().warning("Only players can withdraw tokens.");
+            return true;
         }
+
+        if (args.length != 1) {
+            player.sendMessage(ChatColor.RED + "Usage: /withdraw <amount>");
+            return true;
+        }
+
+        Integer amount = parseAmount(args[0]);
+        if (amount == null) {
+            player.sendMessage(ChatColor.RED + "Invalid number: " + args[0]);
+            return true;
+        }
+
+        if (amount <= 0) {
+            player.sendMessage(ChatColor.RED + "Amount must be positive.");
+            return true;
+        }
+
+        boolean success = tokenManager.withdrawToken(player.getUniqueId(), player, amount);
+
+        if (success) {
+            int remaining = tokenManager.getToken(player.getUniqueId());
+            player.sendMessage(ChatColor.GREEN + "Withdrew " + amount + " tokens. " + ChatColor.WHITE + "Balance: " + ChatColor.GREEN + remaining);
+        } else {
+            player.sendMessage(ChatColor.RED + "You don't have enough tokens!");
+        }
+
         return true;
     }
 

@@ -30,16 +30,15 @@ public class Database {
         connection = DriverManager.getConnection("jdbc:mysql://" + HOST + ":" + PORT + "/" + DATABASE + "?useSSL=false", USERNAME, PASSWORD);
     }
 
-    public boolean isConnected() {
-        return connection != null;
-    }
+    public boolean isConnected() {return connection != null;}
+    public Connection getConnection() {return connection;}
 
 
     public void disconnect() {
         if (isConnected()) {
             try {
                 connection.close();
-            }catch (SQLException e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }

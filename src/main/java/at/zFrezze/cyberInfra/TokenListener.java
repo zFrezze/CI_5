@@ -40,60 +40,68 @@ public class TokenListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPreCraft(PrepareItemCraftEvent e) {
-        if (e.getView().getPlayer() instanceof Player player) {
-            ItemStack result = e.getInventory().getResult();
-            if (result != null && result.hasItemMeta()
-                    && result.getItemMeta().getPersistentDataContainer()
-                    .has(TokenCraft.TOKEN_KEY, PersistentDataType.BYTE)) {
-                readyToCraft.add(player.getUniqueId());
-            } else {
-                readyToCraft.remove(player.getUniqueId());
-            }
+        if (!(e.getView().getPlayer() instanceof Player player)) {
+            return;
+        }
+
+        ItemStack result = e.getInventory().getResult();
+        if (result != null && result.hasItemMeta()
+                && result.getItemMeta().getPersistentDataContainer()
+                .has(TokenCraft.TOKEN_KEY, PersistentDataType.BYTE)) {
+            readyToCraft.add(player.getUniqueId());
+        } else {
+            readyToCraft.remove(player.getUniqueId());
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCraft(InventoryClickEvent e) {
-        if (e.getClickedInventory() instanceof CraftingInventory inv) {
-            if (e.getSlot() == 0) {
-                if (e.getWhoClicked() instanceof Player player) {
-                    if (readyToCraft.contains(player.getUniqueId())) {
+        if (!(e.getClickedInventory() instanceof CraftingInventory inv)) {
+            return;
+        }
+        if (e.getSlot() != 0) {
+            return;
+        }
+        if (!(e.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+        if (!readyToCraft.contains(player.getUniqueId())) {
+            return;
+        }
 
-                        e.setCancelled(true);
+        e.setCancelled(true);
 
-                        int count = e.isShiftClick() ? maxCrafts(inv) : 1;
-                        if (count > 0) {
-                            readyToCraft.remove(player.getUniqueId());
+        int count = e.isShiftClick() ? maxCrafts(inv) : 1;
+        if (count <= 0) {
+            return;
+        }
 
-                            ItemStack[] old = inv.getMatrix();
-                            ItemStack[] next = new ItemStack[old.length];
-                            for (int i = 0; i < old.length; i++) {
-                                ItemStack item = old[i];
-                                if (item == null || item.getType() == Material.AIR) {
-                                    next[i] = null;
-                                } else {
-                                    ItemStack copy = item.clone();
-                                    int left = copy.getAmount() - count;
-                                    if (left <= 0) {
-                                        next[i] = null;
-                                    } else {
-                                        copy.setAmount(left);
-                                        next[i] = copy;
-                                    }
-                                }
-                            }
+        readyToCraft.remove(player.getUniqueId());
 
-                            int total = count * TOKENS_PER_CRAFT;
-                            tokenManager.addToken(player.getUniqueId(), total);
-                            player.sendMessage("Du hast " + ChatColor.GREEN + total + " Tokens " + ChatColor.WHITE + "gecraftet");
-
-                            inv.setMatrix(next);
-                            player.updateInventory();
-                        }
-                    }
+        ItemStack[] old = inv.getMatrix();
+        ItemStack[] next = new ItemStack[old.length];
+        for (int i = 0; i < old.length; i++) {
+            ItemStack item = old[i];
+            if (item == null || item.getType() == Material.AIR) {
+                next[i] = null;
+            } else {
+                ItemStack copy = item.clone();
+                int left = copy.getAmount() - count;
+                if (left <= 0) {
+                    next[i] = null;
+                } else {
+                    copy.setAmount(left);
+                    next[i] = copy;
                 }
             }
         }
+
+        int total = count * TOKENS_PER_CRAFT;
+        tokenManager.addToken(player.getUniqueId(), total);
+        player.sendMessage("Du hast " + ChatColor.GREEN + total + " Tokens " + ChatColor.WHITE + "gecraftet");
+
+        inv.setMatrix(next);
+        player.updateInventory();
     }
 
     @EventHandler
@@ -118,31 +126,34 @@ public class TokenListener implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
-        if ((e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)
-                && e.getHand() == EquipmentSlot.HAND) {
+        if (!(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)
+                || e.getHand() != EquipmentSlot.HAND) {
+            return;
+        }
 
-            ItemStack item = e.getItem();
+        ItemStack item = e.getItem();
+        if (item == null || item.getItemMeta() == null) {
+            return;
+        }
 
-            if (item != null && item.getItemMeta() != null) {
-                ItemMeta meta = item.getItemMeta();
+        ItemMeta meta = item.getItemMeta();
+        if (!meta.getPersistentDataContainer().has(TokenCraft.TOKEN_KEY, PersistentDataType.BYTE)) {
+            return;
+        }
 
-                if (meta.getPersistentDataContainer().has(TokenCraft.TOKEN_KEY, PersistentDataType.BYTE)) {
-                    e.setCancelled(true);
+        e.setCancelled(true);
 
-                    int stackAmount = item.getAmount();
+        int stackAmount = item.getAmount();
 
-                    if (e.getPlayer().isSneaking()) {
-                        item.setAmount(stackAmount - 1);
-                        e.getPlayer().getInventory().setItemInMainHand(item.getAmount() > 0 ? item : null);
-                        tokenManager.addToken(e.getPlayer().getUniqueId(), 1);
-                        e.getPlayer().sendMessage("Du hast " + ChatColor.GREEN + "1 Token " + ChatColor.WHITE + "eingezahlt");
-                    } else {
-                        e.getPlayer().getInventory().setItemInMainHand(null);
-                        tokenManager.addToken(e.getPlayer().getUniqueId(), stackAmount);
-                        e.getPlayer().sendMessage("Du hast " + ChatColor.GREEN + stackAmount + " Tokens " + ChatColor.WHITE + "eingezahlt");
-                    }
-                }
-            }
+        if (e.getPlayer().isSneaking()) {
+            item.setAmount(stackAmount - 1);
+            e.getPlayer().getInventory().setItemInMainHand(item.getAmount() > 0 ? item : null);
+            tokenManager.addToken(e.getPlayer().getUniqueId(), 1);
+            e.getPlayer().sendMessage("Du hast " + ChatColor.GREEN + "1 Token " + ChatColor.WHITE + "eingezahlt");
+        } else {
+            e.getPlayer().getInventory().setItemInMainHand(null);
+            tokenManager.addToken(e.getPlayer().getUniqueId(), stackAmount);
+            e.getPlayer().sendMessage("Du hast " + ChatColor.GREEN + stackAmount + " Tokens " + ChatColor.WHITE + "eingezahlt");
         }
     }
 }
