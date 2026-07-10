@@ -39,6 +39,7 @@ public final class CyberInfra extends JavaPlugin {
 
         Bukkit.getPluginManager().registerEvents(new JoinListener(this, playerManager), this);
         Bukkit.getPluginManager().registerEvents(new TokenListener(this, playerManager), this);
+        Bukkit.getPluginManager().registerEvents(new DeathListener(), this);
 
         new TokenCraft(this).registerRecipe();
 
