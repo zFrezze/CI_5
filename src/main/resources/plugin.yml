@@ -11,6 +11,8 @@ commands:
     description: Withdraw tokens from your balance
     usage: /withdraw <amount>
     aliases: wd
+  sethome:
+  removehome:
 permissions:
   ci.admin:
     description: Full admin access

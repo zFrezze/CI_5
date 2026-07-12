@@ -1,5 +1,7 @@
-package at.zFrezze.cyberInfra;
+package at.zFrezze.cyberInfra.listeners;
 
+import at.zFrezze.cyberInfra.TokenCraft;
+import at.zFrezze.cyberInfra.data.PlayerManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -32,7 +34,7 @@ public class TokenListener implements Listener {
 
     private final Set<UUID> readyToCraft = ConcurrentHashMap.newKeySet();
 
-    TokenListener(Plugin plugin,PlayerManager playerManager) {
+    public TokenListener(Plugin plugin, PlayerManager playerManager) {
         this.plugin = plugin;
         this.playerManager = playerManager;
     }

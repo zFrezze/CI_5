@@ -1,6 +1,11 @@
 token:
   skin-url: https://textures.minecraft.net/texture/31f51d801ce3e665c7d0d5c381acb1a438752cf576e5e86102a4f7ca358a6aad
 
+homes:
+  price-set: 25
+  price-remove: 10
+  skin-url: https://textures.minecraft.net/texture/514668a7cfd7860c0489f30c74054baa677387d0ed518276253912c7c7e02c9e
+
 database:
   host: "localhost"
   port: 3306

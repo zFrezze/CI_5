@@ -1,4 +1,6 @@
-package at.zFrezze.cyberInfra;
+package at.zFrezze.cyberInfra.data;
+
+import at.zFrezze.cyberInfra.CyberInfra;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,7 +17,7 @@ public class Database {
     private final String USERNAME;
     private final String PASSWORD;
 
-    Database(CyberInfra main) {
+    public Database(CyberInfra main) {
         this.main = main;
         this.HOST = main.getConfig().getString("database.host");
         this.PORT = main.getConfig().getInt("database.port");
@@ -31,11 +33,24 @@ public class Database {
     }
 
     public void createTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS tokens (" +
+        String tokensSql = "CREATE TABLE IF NOT EXISTS tokens (" +
                 "uuid VARCHAR(36) PRIMARY KEY, " +
                 "token INT NOT NULL DEFAULT 0)";
+
+        String homesSql = "CREATE TABLE IF NOT EXISTS homes (" +
+                "uuid VARCHAR(36) NOT NULL, " +
+                "name VARCHAR(32) NOT NULL, " +
+                "world VARCHAR(64) NOT NULL, " +
+                "x DOUBLE NOT NULL, " +
+                "y DOUBLE NOT NULL, " +
+                "z DOUBLE NOT NULL, " +
+                "yaw FLOAT NOT NULL, " +
+                "pitch FLOAT NOT NULL, " +
+                "PRIMARY KEY (uuid, name))";
+
         try (java.sql.Statement stmt = connection.createStatement()) {
-            stmt.execute(sql);
+            stmt.execute(tokensSql);
+            stmt.execute(homesSql);
         } catch (SQLException e) {
             main.getLogger().severe("Table creation failed: " + e.getMessage());
         }

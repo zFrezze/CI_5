@@ -1,11 +1,17 @@
-package at.zFrezze.cyberInfra;
+package at.zFrezze.cyberInfra.data;
 
+import at.zFrezze.cyberInfra.CyberInfra;
+import at.zFrezze.cyberInfra.TokenCraft;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,7 +32,7 @@ public class PlayerManager {
         int token = 0;
         boolean found = false;
 
-        try (PreparedStatement statement = main.getDatabase().getConnection().prepareStatement("SELECT token FROM tokens WHERE uuid = ?");) {
+        try (PreparedStatement statement = main.getDatabase().getConnection().prepareStatement("SELECT token FROM tokens WHERE uuid = ?")) {
             statement.setString(1, uuid.toString());
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
@@ -34,14 +40,39 @@ public class PlayerManager {
                 found = true;
             }
         } catch (SQLException e) {
-            main.getLogger().severe("Load failed for " + uuid + ": " + e.getMessage());
+            main.getLogger().severe("Token load failed for " + uuid + ": " + e.getMessage());
         }
 
         if (!found) {
             token = 100;
         }
 
-        players.put(uuid, new CustomPlayer(uuid, token));
+        CustomPlayer cp = new CustomPlayer(uuid, token);
+        players.put(uuid, cp);
+
+        try (PreparedStatement statement = main.getDatabase().getConnection().prepareStatement("SELECT name, world, x, y, z, yaw, pitch FROM homes WHERE uuid = ?")) {
+            statement.setString(1, uuid.toString());
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                String worldName = rs.getString("world");
+                World world = Bukkit.getWorld(worldName);
+                if (world == null) {
+                    continue;
+                }
+
+                String name = rs.getString("name");
+                double x = rs.getDouble("x");
+                double y = rs.getDouble("y");
+                double z = rs.getDouble("z");
+                float yaw = rs.getFloat("yaw");
+                float pitch = rs.getFloat("pitch");
+
+                Location location = new Location(world, x, y, z, yaw, pitch);
+                cp.setHome(name, location);
+            }
+        } catch (SQLException e) {
+            main.getLogger().severe("Home load failed for " + uuid + ": " + e.getMessage());
+        }
     }
 
     public void savePlayer(UUID uuid) {
@@ -50,13 +81,40 @@ public class PlayerManager {
             return;
         }
 
-        try (PreparedStatement statement = main.getDatabase().getConnection().prepareStatement("INSERT INTO tokens (uuid, token) VALUES (?, ?) " + "ON DUPLICATE KEY UPDATE token = ?");) {
+        try (PreparedStatement statement = main.getDatabase().getConnection().prepareStatement("INSERT INTO tokens (uuid, token) VALUES (?, ?) " + "ON DUPLICATE KEY UPDATE token = ?")) {
             statement.setString(1, uuid.toString());
             statement.setInt(2, cp.getToken());
             statement.setInt(3, cp.getToken());
             statement.executeUpdate();
         } catch (SQLException e) {
-            main.getLogger().severe("Save failed for " + uuid + ": " + e.getMessage());
+            main.getLogger().severe("Token save failed for " + uuid + ": " + e.getMessage());
+        }
+
+        try (PreparedStatement statement = main.getDatabase().getConnection().prepareStatement("DELETE FROM homes WHERE uuid = ?")) {
+            statement.setString(1, uuid.toString());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            main.getLogger().severe("Home save failed for " + uuid + ": " + e.getMessage());
+        }
+
+        try (PreparedStatement statement = main.getDatabase().getConnection().prepareStatement("INSERT INTO homes (uuid, name, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
+            for (Map.Entry<String, Location> entry : cp.getHomes().entrySet()) {
+                String name = entry.getKey();
+                Location location = entry.getValue();
+
+                statement.setString(1, uuid.toString());
+                statement.setString(2, name);
+                statement.setString(3, location.getWorld().getName());
+                statement.setDouble(4, location.getX());
+                statement.setDouble(5, location.getY());
+                statement.setDouble(6, location.getZ());
+                statement.setFloat(7, location.getYaw());
+                statement.setFloat(8, location.getPitch());
+                statement.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            main.getLogger().severe("Home save failed for " + uuid + ": " + e.getMessage());
         }
     }
 
@@ -88,8 +146,6 @@ public class PlayerManager {
     }
 
 
-
-
     public int getToken(UUID uuid) {
         CustomPlayer cp = players.get(uuid);
         if (cp != null) {
@@ -104,12 +160,12 @@ public class PlayerManager {
             cp.setToken(amount);
             return;
         }
-        try(PreparedStatement statement = main.getDatabase().getConnection().prepareStatement("INSERT INTO tokens (uuid, token) VALUES (?, ?) ON DUPLICATE KEY UPDATE token = ?")) {
+        try (PreparedStatement statement = main.getDatabase().getConnection().prepareStatement("INSERT INTO tokens (uuid, token) VALUES (?, ?) ON DUPLICATE KEY UPDATE token = ?")) {
             statement.setString(1, uuid.toString());
             statement.setInt(2, amount);
             statement.setInt(3, amount);
             statement.executeUpdate();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             main.getLogger().severe("Save failed for " + uuid + ": " + e.getMessage());
         }
     }

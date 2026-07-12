@@ -1,5 +1,7 @@
-package at.zFrezze.cyberInfra;
+package at.zFrezze.cyberInfra.listeners;
 
+import at.zFrezze.cyberInfra.CyberInfra;
+import at.zFrezze.cyberInfra.data.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

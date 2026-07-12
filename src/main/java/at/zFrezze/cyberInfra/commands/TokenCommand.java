@@ -1,5 +1,6 @@
-package at.zFrezze.cyberInfra;
+package at.zFrezze.cyberInfra.commands;
 
+import at.zFrezze.cyberInfra.data.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
