@@ -34,15 +34,11 @@ public class RemovehomeCommand implements CommandExecutor, TabCompleter {
         CustomPlayer cp = playerManager.get(player.getUniqueId());
         if (cp == null) return true;
 
-        if (args.length >= 2) {
+        if (args.length != 1) {
             sender.sendMessage(ChatColor.RED + "Invalid usage! /removehome <name>");
             return true;
         }
 
-        if (args.length == 0) {
-            sender.sendMessage(ChatColor.RED + "Invalid usage! /removehome <name>");
-            return true;
-        }
         if (cp.getHome(args[0]) == null) {
             sender.sendMessage(ChatColor.RED + args[0] + " doesn't exist!");
             return true;

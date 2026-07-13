@@ -31,7 +31,6 @@ public class DeathListener implements Listener {
 
 
         }
-        //Bukkit.getLogger().warning(deathMessage + " itemName" + killer.getInventory().getItemInMainHand().getItemMeta().getItemName() + " itemDisplayName" + killer.getInventory().getItemInMainHand().getItemMeta().getDisplayName());
         e.setDeathMessage(deathMessage);
     }
 

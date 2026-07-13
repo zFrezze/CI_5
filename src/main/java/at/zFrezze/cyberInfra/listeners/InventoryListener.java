@@ -40,29 +40,30 @@ public class InventoryListener implements Listener {
 
                     switch (pendingHome.getAction()) {
                         case SET_HOME, OVERRIDE_HOME -> {
-                            playerManager.removeToken(player.getUniqueId(), pendingHome.getPrice());
-                            customPlayer.setHome(pendingHome.getName(), pendingHome.getLocation());
-                            player.sendMessage(ChatColor.GREEN + pendingHome.getName() + ChatColor.WHITE + " successfully created! " + ChatColor.GRAY + "(-" + pendingHome.getPrice() + " tokens)");
+                            if (playerManager.getToken(player.getUniqueId()) >= pendingHome.getPrice()) {
+
+                                playerManager.removeToken(player.getUniqueId(), pendingHome.getPrice());
+                                customPlayer.setHome(pendingHome.getName(), pendingHome.getLocation());
+                                player.sendMessage(ChatColor.GREEN + pendingHome.getName() + ChatColor.WHITE + " successfully created! " + ChatColor.GRAY + "(-" + pendingHome.getPrice() + " tokens)");
+                            }
                         }
-                        case REMOVE_HOME -> {
-                            playerManager.addToken(player.getUniqueId(), pendingHome.getPrice());
-                            customPlayer.removeHome(pendingHome.getName());
-                            player.sendMessage(ChatColor.GREEN + pendingHome.getName() + ChatColor.WHITE + " successfully removed! " + ChatColor.GRAY + "(+" + pendingHome.getPrice() + " tokens)");
+                            case REMOVE_HOME -> {
+                                playerManager.addToken(player.getUniqueId(), pendingHome.getPrice());
+                                customPlayer.removeHome(pendingHome.getName());
+                                player.sendMessage(ChatColor.GREEN + pendingHome.getName() + ChatColor.WHITE + " successfully removed! " + ChatColor.GRAY + "(+" + pendingHome.getPrice() + " tokens)");
+                            }
                         }
+                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
+                        confirmGUI.removePending(player.getUniqueId());
+                        break;
+                        case 13:
+                            return;
+                        case 15:
+                            break;
+                        default:
+                            return;
                     }
-                    player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
-                    confirmGUI.removePending(player.getUniqueId());
-                    break;
-                case 13:
-                    return;
-                case 15:
-                    break;
-                default:
-                    return;
+                    player.closeInventory();
             }
-            player.closeInventory();
         }
-
-    }
-
 }

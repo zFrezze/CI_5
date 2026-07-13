@@ -86,7 +86,6 @@ public class ConfirmGUI {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        player.sendMessage(url);
         profile.setTextures(textures);
         meta.setOwnerProfile(profile);
 
