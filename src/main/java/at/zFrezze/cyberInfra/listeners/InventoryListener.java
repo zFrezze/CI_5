@@ -66,4 +66,5 @@ public class InventoryListener implements Listener {
                     player.closeInventory();
             }
         }
+
 }
