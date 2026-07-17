@@ -5,7 +5,8 @@ import at.zFrezze.cyberInfra.data.CustomPlayer;
 import at.zFrezze.cyberInfra.data.PlayerManager;
 import at.zFrezze.cyberInfra.gui.ConfirmGUI;
 import at.zFrezze.cyberInfra.gui.HomeActions;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -35,12 +36,12 @@ public class RemovehomeCommand implements CommandExecutor, TabCompleter {
         if (cp == null) return true;
 
         if (args.length != 1) {
-            sender.sendMessage(ChatColor.RED + "Invalid usage! /removehome <name>");
+            player.sendActionBar(Component.text("Invalid usage! /removehome <name>", NamedTextColor.RED));
             return true;
         }
 
         if (cp.getHome(args[0]) == null) {
-            sender.sendMessage(ChatColor.RED + args[0] + " doesn't exist!");
+            player.sendActionBar(Component.text(args[0] + " doesn't exist!", NamedTextColor.RED));
             return true;
         }
 
@@ -51,14 +52,11 @@ public class RemovehomeCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] args) {
-
-        Player player = (Player) sender;
+        if (!(sender instanceof Player player)) return new ArrayList<>();
 
         CustomPlayer cp = playerManager.get(player.getUniqueId());
-        if (cp != null) {
-            if (args.length == 1) {
-                return StringUtil.copyPartialMatches(args[0], cp.getHomes().keySet(), new ArrayList<>());
-            }
+        if (cp != null && args.length == 1) {
+            return StringUtil.copyPartialMatches(args[0], cp.getHomes().keySet(), new ArrayList<>());
         }
         return new ArrayList<>();
     }

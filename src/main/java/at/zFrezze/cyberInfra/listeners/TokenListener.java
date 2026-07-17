@@ -2,8 +2,10 @@ package at.zFrezze.cyberInfra.listeners;
 
 import at.zFrezze.cyberInfra.TokenCraft;
 import at.zFrezze.cyberInfra.data.PlayerManager;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -99,7 +101,8 @@ public class TokenListener implements Listener {
 
         int total = count * TOKENS_PER_CRAFT;
         playerManager.addToken(player.getUniqueId(), total);
-        player.sendMessage("Du hast " + ChatColor.GREEN + total + " Tokens " + ChatColor.WHITE + "gecraftet");
+        player.sendActionBar(Component.text("Du hast " + total + " Tokens gecraftet", NamedTextColor.GREEN));
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
 
         inv.setMatrix(next);
         player.updateInventory();
@@ -144,17 +147,19 @@ public class TokenListener implements Listener {
 
         e.setCancelled(true);
 
+        Player player = e.getPlayer();
         int stackAmount = item.getAmount();
 
-        if (e.getPlayer().isSneaking()) {
+        if (player.isSneaking()) {
             item.setAmount(stackAmount - 1);
-            e.getPlayer().getInventory().setItemInMainHand(item.getAmount() > 0 ? item : null);
-            playerManager.addToken(e.getPlayer().getUniqueId(), 1);
-            e.getPlayer().sendMessage("Du hast " + ChatColor.GREEN + "1 Token " + ChatColor.WHITE + "eingezahlt");
+            player.getInventory().setItemInMainHand(item.getAmount() > 0 ? item : null);
+            playerManager.addToken(player.getUniqueId(), 1);
+            player.sendActionBar(Component.text("Du hast 1 Token eingezahlt", NamedTextColor.GREEN));
         } else {
-            e.getPlayer().getInventory().setItemInMainHand(null);
-            playerManager.addToken(e.getPlayer().getUniqueId(), stackAmount);
-            e.getPlayer().sendMessage("Du hast " + ChatColor.GREEN + stackAmount + " Tokens " + ChatColor.WHITE + "eingezahlt");
+            player.getInventory().setItemInMainHand(null);
+            playerManager.addToken(player.getUniqueId(), stackAmount);
+            player.sendActionBar(Component.text("Du hast " + stackAmount + " Tokens eingezahlt", NamedTextColor.GREEN));
         }
+        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
     }
 }

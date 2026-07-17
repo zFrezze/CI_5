@@ -14,6 +14,8 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 
+import java.awt.*;
+import java.awt.print.Paper;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -95,6 +97,8 @@ public class ConfirmGUI {
 
         pending.put(player.getUniqueId(), new PendingHome(homeName, location, price, homeActions));
         player.openInventory(inv);
+
+        
 
     }
 

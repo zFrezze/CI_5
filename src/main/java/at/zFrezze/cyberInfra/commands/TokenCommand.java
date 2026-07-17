@@ -1,8 +1,9 @@
 package at.zFrezze.cyberInfra.commands;
 
 import at.zFrezze.cyberInfra.data.PlayerManager;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -73,7 +74,7 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
 
         if (args.length == 0) {
             int amount = playerManager.getToken(player.getUniqueId());
-            player.sendMessage("You have " + ChatColor.GREEN + amount + ChatColor.WHITE + " tokens.");
+            player.sendActionBar(Component.text("You have " + amount + " tokens.", NamedTextColor.GREEN));
             return true;
         }
 
@@ -83,25 +84,25 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
                 if (args.length >= 2 && player.hasPermission("ci.tokens.others")) {
                     OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
                     int amount = playerManager.getToken(target.getUniqueId());
-                    player.sendMessage(target.getName() + " has " + ChatColor.GREEN + amount + ChatColor.WHITE + " tokens.");
+                    player.sendActionBar(Component.text(target.getName() + " has " + amount + " tokens.", NamedTextColor.GREEN));
                 } else {
                     int amount = playerManager.getToken(player.getUniqueId());
-                    player.sendMessage("You have " + ChatColor.GREEN + amount + ChatColor.WHITE + " tokens.");
+                    player.sendActionBar(Component.text("You have " + amount + " tokens.", NamedTextColor.GREEN));
                 }
             }
 
             case "set", "add", "remove" -> {
                 if (!player.hasPermission("ci.admin") && !player.hasPermission("ci.tokens.admin")) {
-                    player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
+                    player.sendActionBar(Component.text("You don't have permission to do that.", NamedTextColor.RED));
                     return true;
                 }
                 if (args.length != 3) {
-                    player.sendMessage(ChatColor.RED + "Usage: /token " + args[0].toLowerCase() + " <player> <amount>");
+                    player.sendActionBar(Component.text("Usage: /token " + args[0].toLowerCase() + " <player> <amount>", NamedTextColor.RED));
                     return true;
                 }
                 Integer amount = parseAmount(args[2]);
                 if (amount == null) {
-                    player.sendMessage(ChatColor.RED + "Invalid number: " + args[2]);
+                    player.sendActionBar(Component.text("Invalid number: " + args[2], NamedTextColor.RED));
                     return true;
                 }
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
@@ -110,15 +111,16 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
                     case "add" -> playerManager.addToken(target.getUniqueId(), amount);
                     case "remove" -> playerManager.removeToken(target.getUniqueId(), amount);
                 }
-                player.sendMessage(ChatColor.GREEN + args[0].toLowerCase() + " done for " + target.getName() + " (" + amount + ").");
+                player.sendActionBar(Component.text(args[0].toLowerCase() + " done for " + target.getName() + " (" + amount + ").", NamedTextColor.GREEN));
             }
 
             default -> {
-                if (!player.hasPermission("ci.admin") || !player.hasPermission("ci.tokens.admin")) {
+                boolean isAdmin = player.hasPermission("ci.admin") || player.hasPermission("ci.tokens.admin");
+                if (!isAdmin) {
                     int amount = playerManager.getToken(player.getUniqueId());
-                    player.sendMessage("You have " + ChatColor.GREEN + amount + ChatColor.WHITE + " tokens.");
+                    player.sendActionBar(Component.text("You have " + amount + " tokens.", NamedTextColor.GREEN));
                 } else {
-                    player.sendMessage(ChatColor.RED + "Invalid usage! Use /token info|set|add|remove <player> [amount]");
+                    player.sendActionBar(Component.text("Invalid usage! Use /token info|set|add|remove <player> [amount]", NamedTextColor.RED));
                 }
             }
         }

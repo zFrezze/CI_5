@@ -1,9 +1,6 @@
 package at.zFrezze.cyberInfra;
 
-import at.zFrezze.cyberInfra.commands.RemovehomeCommand;
-import at.zFrezze.cyberInfra.commands.SethomeCommand;
-import at.zFrezze.cyberInfra.commands.TokenCommand;
-import at.zFrezze.cyberInfra.commands.WithdrawCommand;
+import at.zFrezze.cyberInfra.commands.*;
 import at.zFrezze.cyberInfra.data.Database;
 import at.zFrezze.cyberInfra.data.PlayerManager;
 import at.zFrezze.cyberInfra.listeners.DeathListener;
@@ -25,7 +22,7 @@ public final class CyberInfra extends JavaPlugin {
     private Database database;
     private ConfirmGUI confirmGUI;
 
-    public static final String CONFIRM_GUI_TITLE = ChatColor.DARK_GRAY + "Bestätigung";
+    public static final String CONFIRM_GUI_TITLE = ChatColor.DARK_GRAY + "Confirmation";
 
 
     @Override
@@ -74,6 +71,10 @@ public final class CyberInfra extends JavaPlugin {
         RemovehomeCommand removehomeCommand = new RemovehomeCommand(playerManager, this, confirmGUI);
         getCommand("removehome").setExecutor(removehomeCommand);
         getCommand("removehome").setTabCompleter(removehomeCommand);
+
+        HomeCommand homeCommand = new HomeCommand(confirmGUI, playerManager);
+        getCommand("home").setExecutor(homeCommand);
+        getCommand("home").setTabCompleter(homeCommand);
 
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> playerManager.saveAll(), 6000L, 6000L);
     }

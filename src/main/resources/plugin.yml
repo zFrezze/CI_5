@@ -13,6 +13,7 @@ commands:
     aliases: wd
   sethome:
   removehome:
+  home:
 permissions:
   ci.admin:
     description: Full admin access

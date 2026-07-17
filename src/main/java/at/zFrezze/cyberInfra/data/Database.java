@@ -2,9 +2,8 @@ package at.zFrezze.cyberInfra.data;
 
 import at.zFrezze.cyberInfra.CyberInfra;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.UUID;
 
 public class Database {
 
@@ -48,9 +47,13 @@ public class Database {
                 "pitch FLOAT NOT NULL, " +
                 "PRIMARY KEY (uuid, name))";
 
+        String rulesSql = "CREATE TABLE IF NOT EXISTS rules_accepted (" +
+                "uuid VARCHAR(36) PRIMARY KEY)";
+
         try (java.sql.Statement stmt = connection.createStatement()) {
             stmt.execute(tokensSql);
             stmt.execute(homesSql);
+            stmt.execute(rulesSql);
         } catch (SQLException e) {
             main.getLogger().severe("Table creation failed: " + e.getMessage());
         }
@@ -66,6 +69,28 @@ public class Database {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public boolean hasAcceptedRules(UUID uuid) {
+        String sql = "SELECT uuid FROM rules_accepted WHERE uuid = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, uuid.toString());
+            ResultSet rs = statement.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            main.getLogger().severe("Rules check failed for " + uuid + ": " + e.getMessage());
+            return false;
+        }
+    }
+
+    public void setRulesAccepted(UUID uuid) {
+        String sql = "INSERT IGNORE INTO rules_accepted (uuid) VALUES (?)";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, uuid.toString());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            main.getLogger().severe("Rules save failed for " + uuid + ": " + e.getMessage());
         }
     }
 }

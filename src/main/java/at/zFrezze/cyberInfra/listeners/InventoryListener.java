@@ -5,6 +5,8 @@ import at.zFrezze.cyberInfra.CyberInfra;
 import at.zFrezze.cyberInfra.data.CustomPlayer;
 import at.zFrezze.cyberInfra.data.PendingHome;
 import at.zFrezze.cyberInfra.data.PlayerManager;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -25,46 +27,65 @@ public class InventoryListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent e) {
 
-        if (ChatColor.translateAlternateColorCodes('&', e.getView().getTitle()).equals(CyberInfra.CONFIRM_GUI_TITLE) && e.getCurrentItem() != null) {
-
-            e.setCancelled(true);
-
-            Player player = (Player) e.getWhoClicked();
-
-            CustomPlayer customPlayer = playerManager.get(player.getUniqueId());
-
-            switch (e.getRawSlot()) {
-                case 11:
-                    PendingHome pendingHome = confirmGUI.getPending(player.getUniqueId());
-                    if (pendingHome == null) return;
-
-                    switch (pendingHome.getAction()) {
-                        case SET_HOME, OVERRIDE_HOME -> {
-                            if (playerManager.getToken(player.getUniqueId()) >= pendingHome.getPrice()) {
-
-                                playerManager.removeToken(player.getUniqueId(), pendingHome.getPrice());
-                                customPlayer.setHome(pendingHome.getName(), pendingHome.getLocation());
-                                player.sendMessage(ChatColor.GREEN + pendingHome.getName() + ChatColor.WHITE + " successfully created! " + ChatColor.GRAY + "(-" + pendingHome.getPrice() + " tokens)");
-                            }
-                        }
-                        case REMOVE_HOME -> {
-                            playerManager.addToken(player.getUniqueId(), pendingHome.getPrice());
-                            customPlayer.removeHome(pendingHome.getName());
-                            player.sendMessage(ChatColor.GREEN + pendingHome.getName() + ChatColor.WHITE + " successfully removed! " + ChatColor.GRAY + "(+" + pendingHome.getPrice() + " tokens)");
-                        }
-                    }
-                    player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
-                    confirmGUI.removePending(player.getUniqueId());
-                    break;
-                case 13:
-                    return;
-                case 15:
-                    break;
-                default:
-                    return;
-                    }
-                    player.closeInventory();
-            }
+        if (!ChatColor.translateAlternateColorCodes('&', e.getView().getTitle()).equals(CyberInfra.CONFIRM_GUI_TITLE) || e.getCurrentItem() == null) {
+            return;
         }
 
+        e.setCancelled(true);
+
+        Player player = (Player) e.getWhoClicked();
+        CustomPlayer customPlayer = playerManager.get(player.getUniqueId());
+        if (customPlayer == null) return;
+
+        switch (e.getRawSlot()) {
+            case 11:
+                PendingHome pendingHome = confirmGUI.getPending(player.getUniqueId());
+                if (pendingHome == null) return;
+
+                int price = pendingHome.getPrice();
+                int balance = playerManager.getToken(player.getUniqueId());
+
+                switch (pendingHome.getAction()) {
+                    case SET_HOME, OVERRIDE_HOME -> {
+                        if (balance < price) {
+                            int missing = price - balance;
+                            player.sendActionBar(Component.text("Not enough tokens! You need " + price + " (you're missing " + missing + ").", NamedTextColor.RED));
+                            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
+                            return;
+                        }
+                        playerManager.removeToken(player.getUniqueId(), price);
+                        customPlayer.setHome(pendingHome.getName(), pendingHome.getLocation());
+                        player.sendActionBar(Component.text(pendingHome.getName() + " successfully created! (-" + price + " tokens)", NamedTextColor.GREEN));
+                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
+                    }
+                    case REMOVE_HOME -> {
+                        playerManager.addToken(player.getUniqueId(), price);
+                        customPlayer.removeHome(pendingHome.getName());
+                        player.sendActionBar(Component.text(pendingHome.getName() + " successfully removed! (+" + price + " tokens)", NamedTextColor.GREEN));
+                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
+                    }
+                    case TELEPORT_HOME -> {
+                        if (balance < price) {
+                            int missing = price - balance;
+                            player.sendActionBar(Component.text("Not enough tokens! You need " + price + " (you're missing " + missing + ").", NamedTextColor.RED));
+                            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
+                            return;
+                        }
+                        playerManager.removeToken(player.getUniqueId(), price);
+                        player.teleport(pendingHome.getLocation());
+                        player.sendActionBar(Component.text("Successfully teleported to " + pendingHome.getName() + ".", NamedTextColor.GREEN));
+                        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
+                    }
+                }
+                confirmGUI.removePending(player.getUniqueId());
+                break;
+            case 13:
+                return;
+            case 15:
+                break;
+            default:
+                return;
+        }
+        player.closeInventory();
+    }
 }

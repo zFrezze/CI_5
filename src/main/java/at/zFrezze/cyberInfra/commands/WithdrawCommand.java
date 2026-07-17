@@ -1,8 +1,10 @@
 package at.zFrezze.cyberInfra.commands;
 
 import at.zFrezze.cyberInfra.data.PlayerManager;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,29 +41,35 @@ public class WithdrawCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length != 1) {
-            player.sendMessage(ChatColor.RED + "Usage: /withdraw <amount>");
+            player.sendActionBar(Component.text("Usage: /withdraw <amount>", NamedTextColor.RED));
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
             return true;
         }
 
         Integer amount = parseAmount(args[0]);
         if (amount == null) {
-            player.sendMessage(ChatColor.RED + "Invalid number: " + args[0]);
+            player.sendActionBar(Component.text("Invalid number: " + args[0], NamedTextColor.RED));
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
             return true;
         }
 
         if (amount <= 0) {
-            player.sendMessage(ChatColor.RED + "Amount must be positive.");
+            player.sendActionBar(Component.text("Amount must be positive.", NamedTextColor.RED));
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
             return true;
         }
 
         boolean success = playerManager.withdrawToken(player.getUniqueId(), player, amount);
 
-        if (success) {
-            int remaining = playerManager.getToken(player.getUniqueId());
-            player.sendMessage(ChatColor.GREEN + "Withdrew " + amount + " tokens. " + ChatColor.WHITE + "Balance: " + ChatColor.GREEN + remaining);
-        } else {
-            player.sendMessage(ChatColor.RED + "You don't have enough tokens!");
+        if (!success) {
+            player.sendActionBar(Component.text("You don't have enough tokens or inventory space!", NamedTextColor.RED));
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
+            return true;
         }
+
+        int remaining = playerManager.getToken(player.getUniqueId());
+        player.sendActionBar(Component.text("Withdrew " + amount + " tokens. Balance: " + remaining, NamedTextColor.GREEN));
+        player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1.0f, 1.0f);
 
         return true;
     }

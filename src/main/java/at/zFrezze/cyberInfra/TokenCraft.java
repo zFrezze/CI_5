@@ -5,7 +5,6 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.profile.PlayerProfile;
@@ -40,7 +39,7 @@ public class TokenCraft {
         try {
             textures.setSkin(new URL(url));
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            main.getLogger().severe("Invalid token skin URL: " + e.getMessage());
         }
         profile.setTextures(textures);
         meta.setOwnerProfile(profile);
@@ -58,7 +57,7 @@ public class TokenCraft {
 
     public void registerRecipe() {
         ItemStack head = buildTokenHead();
-        ShapedRecipe tokenRecipe = new ShapedRecipe(TOKEN_KEY, buildTokenHead());
+        ShapedRecipe tokenRecipe = new ShapedRecipe(TOKEN_KEY, head);
         tokenRecipe.shape("ABA", "CDC", "ABA");
         tokenRecipe.setIngredient('A', Material.DIAMOND);
         tokenRecipe.setIngredient('B', Material.GOLD_BLOCK);
