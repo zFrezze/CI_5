@@ -20,12 +20,14 @@ import java.util.List;
 
 public class HomeCommand implements CommandExecutor, TabCompleter {
 
-    private PlayerManager playerManager;
-    private ConfirmGUI confirmGUI;
+    private final PlayerManager playerManager;
+    private final CyberInfra main;
+    private final ConfirmGUI confirmGUI;
 
-    public HomeCommand(ConfirmGUI confirmGUI, PlayerManager playerManager) {
+    public HomeCommand(ConfirmGUI confirmGUI, PlayerManager playerManager, CyberInfra main) {
         this.confirmGUI = confirmGUI;
         this.playerManager = playerManager;
+        this.main = main;
     }
 
     @Override
@@ -36,14 +38,8 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
         CustomPlayer customPlayer = playerManager.get(player.getUniqueId());
         if (customPlayer == null) return true;
 
-        boolean isAdmin = player.hasPermission("ci.admin") || player.hasPermission("ci.homes.admin");
-
-        if (args.length >= 3 || args.length == 0) {
-            if (!isAdmin) {
-                player.sendActionBar(Component.text("Invalid usage! You need to use /home <Home>", NamedTextColor.RED));
-            } else {
-                player.sendActionBar(Component.text("Invalid usage! You need to use /home <Home> [player]", NamedTextColor.RED));
-            }
+        if (args.length != 1) {
+            player.sendActionBar(Component.text("Invalid usage! You need to use /home <Home>", NamedTextColor.RED));
             return true;
         }
 
@@ -53,7 +49,14 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        confirmGUI.openGUI(player, HomeActions.TELEPORT_HOME, args[0], home, 5, CyberInfra.CONFIRM_GUI_TITLE);
+        int price = main.getTeleportHomePrice();
+        int balance = playerManager.getToken(player.getUniqueId());
+        if (balance < price) {
+            int missing = price - balance;
+            player.sendActionBar(Component.text("Not enough tokens! You need " + price + " (you're missing " + missing + ").", NamedTextColor.RED));
+            return true;
+        }
+        confirmGUI.openGUI(player, HomeActions.TELEPORT_HOME, args[0], home, price, CyberInfra.CONFIRM_GUI_TITLE);
 
         return true;
     }

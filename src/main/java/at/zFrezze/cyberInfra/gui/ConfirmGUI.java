@@ -14,8 +14,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 
-import java.awt.*;
-import java.awt.print.Paper;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -43,7 +41,9 @@ public class ConfirmGUI {
 
         String actionDisplay = homeActions.getDisplay();
 
-        Inventory inv = Bukkit.createInventory(player, 27, title);
+        ConfirmHolder holder = new ConfirmHolder();
+        Inventory inv = Bukkit.createInventory(holder, 27, title);
+        holder.setInventory(inv);
 
         for (int i : new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26}) {
             ItemStack filler = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
@@ -86,7 +86,7 @@ public class ConfirmGUI {
         try {
             textures.setSkin(new URL(url));
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            main.getLogger().severe("Failed to load skin-url: " + e.getMessage());
         }
         profile.setTextures(textures);
         meta.setOwnerProfile(profile);
@@ -98,7 +98,6 @@ public class ConfirmGUI {
         pending.put(player.getUniqueId(), new PendingHome(homeName, location, price, homeActions));
         player.openInventory(inv);
 
-        
 
     }
 
@@ -106,7 +105,7 @@ public class ConfirmGUI {
         return pending.get(uuid);
     }
 
-    public void removePending(UUID uuid) {
-        pending.remove(uuid);
+    public PendingHome removePending(UUID uuid) {
+        return pending.remove(uuid);
     }
 }

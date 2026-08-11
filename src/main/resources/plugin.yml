@@ -24,3 +24,6 @@ permissions:
   ci.tokens.others:
     description: View other players' tokens
     default: op
+  ci.homes.admin:
+    description: Allows /home for other players
+    default: op

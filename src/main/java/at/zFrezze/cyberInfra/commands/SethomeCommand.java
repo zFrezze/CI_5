@@ -14,9 +14,9 @@ import org.bukkit.entity.Player;
 
 public class SethomeCommand implements CommandExecutor {
 
-    private PlayerManager playerManager;
-    private CyberInfra main;
-    private ConfirmGUI confirmGUI;
+    private final PlayerManager playerManager;
+    private final CyberInfra main;
+    private final ConfirmGUI confirmGUI;
 
     public SethomeCommand(PlayerManager playerManager, CyberInfra main, ConfirmGUI confirmGUI) {
         this.playerManager = playerManager;

@@ -4,6 +4,7 @@ import at.zFrezze.cyberInfra.CyberInfra;
 
 import java.sql.*;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 public class Database {
 
@@ -27,7 +28,10 @@ public class Database {
 
     public void connect() throws SQLException {
         connection = DriverManager.getConnection(
-                "jdbc:mysql://" + HOST + ":" + PORT + "/" + DATABASE + "?useSSL=false",
+                "jdbc:mysql://" + HOST + ":" + PORT + "/" + DATABASE
+                        + "?sslMode=REQUIRED"
+                        + "&connectTimeout=5000"
+                        + "&socketTimeout=30000",
                 USERNAME, PASSWORD);
     }
 
@@ -59,15 +63,20 @@ public class Database {
         }
     }
 
-    public boolean isConnected() {return connection != null;}
-    public Connection getConnection() {return connection;}
+    public boolean isConnected() {
+        return connection != null;
+    }
+
+    public Connection getConnection() {
+        return connection;
+    }
 
     public void disconnect() {
         if (isConnected()) {
             try {
                 connection.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                main.getLogger().severe("Failed to disconnect database: " + e.getMessage());
             }
         }
     }
@@ -76,8 +85,9 @@ public class Database {
         String sql = "SELECT uuid FROM rules_accepted WHERE uuid = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, uuid.toString());
-            ResultSet rs = statement.executeQuery();
-            return rs.next();
+            try (ResultSet rs = statement.executeQuery()) {
+                return rs.next();
+            }
         } catch (SQLException e) {
             main.getLogger().severe("Rules check failed for " + uuid + ": " + e.getMessage());
             return false;

@@ -4,6 +4,7 @@ token:
 homes:
   price-set: 25
   price-remove: 10
+  price-teleport: 5
   skin-url: https://textures.minecraft.net/texture/514668a7cfd7860c0489f30c74054baa677387d0ed518276253912c7c7e02c9e
 
 database:

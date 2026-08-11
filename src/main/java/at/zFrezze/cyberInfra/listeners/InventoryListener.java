@@ -5,6 +5,7 @@ import at.zFrezze.cyberInfra.CyberInfra;
 import at.zFrezze.cyberInfra.data.CustomPlayer;
 import at.zFrezze.cyberInfra.data.PendingHome;
 import at.zFrezze.cyberInfra.data.PlayerManager;
+import at.zFrezze.cyberInfra.gui.ConfirmHolder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
@@ -27,7 +28,7 @@ public class InventoryListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent e) {
 
-        if (!ChatColor.translateAlternateColorCodes('&', e.getView().getTitle()).equals(CyberInfra.CONFIRM_GUI_TITLE) || e.getCurrentItem() == null) {
+        if (!(e.getInventory().getHolder() instanceof ConfirmHolder) || e.getCurrentItem() == null) {
             return;
         }
 
@@ -39,7 +40,7 @@ public class InventoryListener implements Listener {
 
         switch (e.getRawSlot()) {
             case 11:
-                PendingHome pendingHome = confirmGUI.getPending(player.getUniqueId());
+                PendingHome pendingHome = confirmGUI.removePending(player.getUniqueId());
                 if (pendingHome == null) return;
 
                 int price = pendingHome.getPrice();
@@ -51,6 +52,7 @@ public class InventoryListener implements Listener {
                             int missing = price - balance;
                             player.sendActionBar(Component.text("Not enough tokens! You need " + price + " (you're missing " + missing + ").", NamedTextColor.RED));
                             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
+                            player.closeInventory();
                             return;
                         }
                         playerManager.removeToken(player.getUniqueId(), price);
@@ -59,6 +61,10 @@ public class InventoryListener implements Listener {
                         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
                     }
                     case REMOVE_HOME -> {
+                        if (customPlayer.getHome(pendingHome.getName()) == null) {
+                            player.closeInventory();
+                            return;
+                        }
                         playerManager.addToken(player.getUniqueId(), price);
                         customPlayer.removeHome(pendingHome.getName());
                         player.sendActionBar(Component.text(pendingHome.getName() + " successfully removed! (+" + price + " tokens)", NamedTextColor.GREEN));
@@ -69,6 +75,7 @@ public class InventoryListener implements Listener {
                             int missing = price - balance;
                             player.sendActionBar(Component.text("Not enough tokens! You need " + price + " (you're missing " + missing + ").", NamedTextColor.RED));
                             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
+                            player.closeInventory();
                             return;
                         }
                         playerManager.removeToken(player.getUniqueId(), price);
@@ -77,11 +84,11 @@ public class InventoryListener implements Listener {
                         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
                     }
                 }
-                confirmGUI.removePending(player.getUniqueId());
                 break;
             case 13:
                 return;
             case 15:
+                confirmGUI.removePending(player.getUniqueId());
                 break;
             default:
                 return;

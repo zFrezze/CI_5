@@ -31,14 +31,14 @@ public class TokenListener implements Listener {
 
     private static final int TOKENS_PER_CRAFT = 100;
 
-    private final Plugin plugin;
     private final PlayerManager playerManager;
+    private final TokenCraft tokenCraft;
 
     private final Set<UUID> readyToCraft = ConcurrentHashMap.newKeySet();
 
-    public TokenListener(Plugin plugin, PlayerManager playerManager) {
-        this.plugin = plugin;
+    public TokenListener(PlayerManager playerManager, TokenCraft tokenCraft) {
         this.playerManager = playerManager;
+        this.tokenCraft = tokenCraft;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -50,7 +50,7 @@ public class TokenListener implements Listener {
         ItemStack result = e.getInventory().getResult();
         if (result != null && result.hasItemMeta()
                 && result.getItemMeta().getPersistentDataContainer()
-                .has(TokenCraft.TOKEN_KEY, PersistentDataType.BYTE)) {
+                .has(tokenCraft.getTokenKey(), PersistentDataType.BYTE)) {
             readyToCraft.add(player.getUniqueId());
         } else {
             readyToCraft.remove(player.getUniqueId());
@@ -101,7 +101,7 @@ public class TokenListener implements Listener {
 
         int total = count * TOKENS_PER_CRAFT;
         playerManager.addToken(player.getUniqueId(), total);
-        player.sendActionBar(Component.text("Du hast " + total + " Tokens gecraftet", NamedTextColor.GREEN));
+        player.sendActionBar(Component.text("You crafted " + total + " Tokens.", NamedTextColor.GREEN));
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
 
         inv.setMatrix(next);
@@ -141,7 +141,7 @@ public class TokenListener implements Listener {
         }
 
         ItemMeta meta = item.getItemMeta();
-        if (!meta.getPersistentDataContainer().has(TokenCraft.TOKEN_KEY, PersistentDataType.BYTE)) {
+        if (!meta.getPersistentDataContainer().has(tokenCraft.getTokenKey(), PersistentDataType.BYTE)) {
             return;
         }
 
@@ -154,11 +154,11 @@ public class TokenListener implements Listener {
             item.setAmount(stackAmount - 1);
             player.getInventory().setItemInMainHand(item.getAmount() > 0 ? item : null);
             playerManager.addToken(player.getUniqueId(), 1);
-            player.sendActionBar(Component.text("Du hast 1 Token eingezahlt", NamedTextColor.GREEN));
+            player.sendActionBar(Component.text("Du have deposited 1 token.", NamedTextColor.GREEN));
         } else {
             player.getInventory().setItemInMainHand(null);
             playerManager.addToken(player.getUniqueId(), stackAmount);
-            player.sendActionBar(Component.text("Du hast " + stackAmount + " Tokens eingezahlt", NamedTextColor.GREEN));
+            player.sendActionBar(Component.text("Du have deposited " + stackAmount + " Tokens.", NamedTextColor.GREEN));
         }
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
     }

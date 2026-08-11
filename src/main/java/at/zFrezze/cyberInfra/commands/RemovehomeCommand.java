@@ -18,9 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RemovehomeCommand implements CommandExecutor, TabCompleter {
-    private PlayerManager playerManager;
-    private CyberInfra main;
-    private ConfirmGUI confirmGUI;
+    private final PlayerManager playerManager;
+    private final CyberInfra main;
+    private final ConfirmGUI confirmGUI;
 
     public RemovehomeCommand(PlayerManager playerManager, CyberInfra main, ConfirmGUI confirmGUI) {
         this.playerManager = playerManager;

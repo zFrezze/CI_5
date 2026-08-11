@@ -29,7 +29,7 @@ public class CustomPlayer {
     }
 
     public void removeToken(int amount) {
-        this.token = this.token - amount;
+        this.token = Math.max(0, this.token - amount);
     }
 
     public Location getHome(String name) {return homes.get(name);}

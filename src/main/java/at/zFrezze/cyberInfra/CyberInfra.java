@@ -14,6 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public final class CyberInfra extends JavaPlugin {
@@ -30,6 +32,13 @@ public final class CyberInfra extends JavaPlugin {
 
         saveDefaultConfig();
 
+        if (!validateConfig()) {
+            getLogger().severe("Config not full — Plugin will get deactivated.");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
+
         database = new Database(this);
         try {
             database.connect();
@@ -43,7 +52,10 @@ public final class CyberInfra extends JavaPlugin {
 
         getLogger().info("Database connection successful!");
 
-        this.playerManager = new PlayerManager(this);
+        TokenCraft tokenCraft = new TokenCraft(this);
+        tokenCraft.registerRecipe();
+
+        this.playerManager = new PlayerManager(this, tokenCraft);
         this.confirmGUI = new ConfirmGUI(this);
 
         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -52,11 +64,9 @@ public final class CyberInfra extends JavaPlugin {
         }
 
         Bukkit.getPluginManager().registerEvents(new JoinListener(this, playerManager), this);
-        Bukkit.getPluginManager().registerEvents(new TokenListener(this, playerManager), this);
+        Bukkit.getPluginManager().registerEvents(new TokenListener(playerManager, tokenCraft), this);
         Bukkit.getPluginManager().registerEvents(new DeathListener(), this);
         Bukkit.getPluginManager().registerEvents(new InventoryListener(confirmGUI, playerManager), this);
-
-        new TokenCraft(this).registerRecipe();
 
         TokenCommand tokenCommand = new TokenCommand(playerManager);
         getCommand("token").setExecutor(tokenCommand);
@@ -72,7 +82,7 @@ public final class CyberInfra extends JavaPlugin {
         getCommand("removehome").setExecutor(removehomeCommand);
         getCommand("removehome").setTabCompleter(removehomeCommand);
 
-        HomeCommand homeCommand = new HomeCommand(confirmGUI, playerManager);
+        HomeCommand homeCommand = new HomeCommand(confirmGUI, playerManager, this);
         getCommand("home").setExecutor(homeCommand);
         getCommand("home").setTabCompleter(homeCommand);
 
@@ -99,11 +109,46 @@ public final class CyberInfra extends JavaPlugin {
         return getSetHomePrice() - getRemoveHomePrice();
     }
 
+    public int getTeleportHomePrice() {return getConfig().getInt("homes.price-teleport");}
+
     @Override
     public void onDisable() {
         if (playerManager != null) {
             playerManager.saveAll();
         }
         database.disconnect();
+    }
+
+    private boolean validateConfig() {
+        List<String> required = List.of(
+                "token.skin-url",
+                "homes.skin-url",
+                "homes.price-set",
+                "homes.price-remove",
+                "homes.price-teleport",
+                "database.host",
+                "database.port",
+                "database.database",
+                "database.username",
+                "database.password"
+        );
+
+        List<String> missing = new ArrayList<>();
+        for (String key : required) {
+            if (!getConfig().contains(key)) {
+                missing.add(key);
+            }
+        }
+
+        if (!missing.isEmpty()) {
+            getLogger().severe("Missing Config-Keys: " + String.join(", ", missing));
+            return false;
+        }
+
+        if (getConfig().getInt("homes.price-set") < getConfig().getInt("homes.price-remove")) {
+            getLogger().warning("price-set is smaller than price-remove → Override would be free!");
+        }
+
+        return true;
     }
 }

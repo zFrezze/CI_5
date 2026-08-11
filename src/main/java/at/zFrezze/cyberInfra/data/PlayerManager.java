@@ -8,6 +8,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,10 +19,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PlayerManager {
 
     private final CyberInfra main;
+    private final TokenCraft tokenCraft;
     private final ConcurrentHashMap<UUID, CustomPlayer> players = new ConcurrentHashMap<>();
 
-    public PlayerManager(CyberInfra main) {
+    public PlayerManager(CyberInfra main, TokenCraft tokenCraft) {
         this.main = main;
+        this.tokenCraft = tokenCraft;
     }
 
     public CustomPlayer get(UUID uuid) {
@@ -81,40 +84,53 @@ public class PlayerManager {
             return;
         }
 
-        try (PreparedStatement statement = main.getDatabase().getConnection().prepareStatement("INSERT INTO tokens (uuid, token) VALUES (?, ?) " + "ON DUPLICATE KEY UPDATE token = ?")) {
-            statement.setString(1, uuid.toString());
-            statement.setInt(2, cp.getToken());
-            statement.setInt(3, cp.getToken());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            main.getLogger().severe("Token save failed for " + uuid + ": " + e.getMessage());
-        }
+        Connection conn = main.getDatabase().getConnection();
 
-        try (PreparedStatement statement = main.getDatabase().getConnection().prepareStatement("DELETE FROM homes WHERE uuid = ?")) {
-            statement.setString(1, uuid.toString());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            main.getLogger().severe("Home save failed for " + uuid + ": " + e.getMessage());
-        }
+        try {
+            conn.setAutoCommit(false);
 
-        try (PreparedStatement statement = main.getDatabase().getConnection().prepareStatement("INSERT INTO homes (uuid, name, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
-            for (Map.Entry<String, Location> entry : cp.getHomes().entrySet()) {
-                String name = entry.getKey();
-                Location location = entry.getValue();
-
+            try (PreparedStatement statement = conn.prepareStatement("INSERT INTO tokens (uuid, token) VALUES (?, ?) ON DUPLICATE KEY UPDATE token = ?")) {
                 statement.setString(1, uuid.toString());
-                statement.setString(2, name);
-                statement.setString(3, location.getWorld().getName());
-                statement.setDouble(4, location.getX());
-                statement.setDouble(5, location.getY());
-                statement.setDouble(6, location.getZ());
-                statement.setFloat(7, location.getYaw());
-                statement.setFloat(8, location.getPitch());
+                statement.setInt(2, cp.getToken());
+                statement.setInt(3, cp.getToken());
                 statement.executeUpdate();
             }
 
+            try (PreparedStatement statement = conn.prepareStatement("DELETE FROM homes WHERE uuid = ?")) {
+                statement.setString(1, uuid.toString());
+                statement.executeUpdate();
+            }
+
+            try (PreparedStatement statement = conn.prepareStatement("INSERT INTO homes (uuid, name, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
+                for (Map.Entry<String, Location> entry : cp.getHomes().entrySet()) {
+                    Location location = entry.getValue();
+                    statement.setString(1, uuid.toString());
+                    statement.setString(2, entry.getKey());
+                    statement.setString(3, location.getWorld().getName());
+                    statement.setDouble(4, location.getX());
+                    statement.setDouble(5, location.getY());
+                    statement.setDouble(6, location.getZ());
+                    statement.setFloat(7, location.getYaw());
+                    statement.setFloat(8, location.getPitch());
+                    statement.addBatch();
+                }
+                statement.executeBatch();
+            }
+
+            conn.commit();
+
         } catch (SQLException e) {
-            main.getLogger().severe("Home save failed for " + uuid + ": " + e.getMessage());
+            try {
+                conn.rollback();
+            } catch (SQLException ex) {
+                main.getLogger().severe("Rollback failed for " + uuid + ": " + ex.getMessage());
+            }
+            main.getLogger().severe("Save failed for " + uuid + ": " + e.getMessage());
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException ignored) {
+            }
         }
     }
 
@@ -207,7 +223,7 @@ public class PlayerManager {
         int remaining = withdrawAmount;
         while (remaining > 0) {
             int stackSize = Math.min(64, remaining);
-            ItemStack head = TokenCraft.getTokenHead();
+            ItemStack head = tokenCraft.getTokenHead();
             head.setAmount(stackSize);
             player.getInventory().addItem(head);
             remaining -= stackSize;

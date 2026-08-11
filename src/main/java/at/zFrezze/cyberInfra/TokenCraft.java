@@ -17,9 +17,13 @@ import java.util.UUID;
 public class TokenCraft {
 
     private final CyberInfra main;
-    private static ItemStack template;
+    private ItemStack template;
+    private NamespacedKey tokenKey;
 
-    public static NamespacedKey TOKEN_KEY;
+    public NamespacedKey getTokenKey() {
+        if (tokenKey == null) tokenKey = new NamespacedKey(main, "token");
+        return tokenKey;
+    }
 
     public TokenCraft(CyberInfra main) {
         this.main = main;
@@ -27,7 +31,7 @@ public class TokenCraft {
 
     public ItemStack buildTokenHead() {
 
-        if (TOKEN_KEY == null) TOKEN_KEY = new NamespacedKey(main, "token");
+        if (tokenKey == null) tokenKey = new NamespacedKey(main, "token");
 
         String url = main.getConfig().getString("token.skin-url");
 
@@ -44,20 +48,23 @@ public class TokenCraft {
         profile.setTextures(textures);
         meta.setOwnerProfile(profile);
 
-        meta.getPersistentDataContainer().set(TOKEN_KEY, PersistentDataType.BYTE, (byte) 1);
+        meta.getPersistentDataContainer().set(tokenKey, PersistentDataType.BYTE, (byte) 1);
         tokenHead.setItemMeta(meta);
 
         template = tokenHead;
         return tokenHead;
     }
 
-    public static ItemStack getTokenHead() {
+    public ItemStack getTokenHead() {
+        if (template == null) {
+            buildTokenHead();
+        }
         return template.clone();
     }
 
     public void registerRecipe() {
         ItemStack head = buildTokenHead();
-        ShapedRecipe tokenRecipe = new ShapedRecipe(TOKEN_KEY, head);
+        ShapedRecipe tokenRecipe = new ShapedRecipe(tokenKey, head);
         tokenRecipe.shape("ABA", "CDC", "ABA");
         tokenRecipe.setIngredient('A', Material.DIAMOND);
         tokenRecipe.setIngredient('B', Material.GOLD_BLOCK);
