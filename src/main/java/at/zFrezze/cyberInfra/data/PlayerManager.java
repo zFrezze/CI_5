@@ -89,10 +89,9 @@ public class PlayerManager {
         try {
             conn.setAutoCommit(false);
 
-            try (PreparedStatement statement = conn.prepareStatement("INSERT INTO tokens (uuid, token) VALUES (?, ?) ON DUPLICATE KEY UPDATE token = ?")) {
+            try (PreparedStatement statement = conn.prepareStatement("INSERT INTO tokens (uuid, token) VALUES (?, ?) ON CONFLICT(uuid) DO UPDATE SET token = excluded.token")) {
                 statement.setString(1, uuid.toString());
                 statement.setInt(2, cp.getToken());
-                statement.setInt(3, cp.getToken());
                 statement.executeUpdate();
             }
 
@@ -176,10 +175,9 @@ public class PlayerManager {
             cp.setToken(amount);
             return;
         }
-        try (PreparedStatement statement = main.getDatabase().getConnection().prepareStatement("INSERT INTO tokens (uuid, token) VALUES (?, ?) ON DUPLICATE KEY UPDATE token = ?")) {
+        try (PreparedStatement statement = main.getDatabase().getConnection().prepareStatement("INSERT INTO tokens (uuid, token) VALUES (?, ?) ON CONFLICT(uuid) DO UPDATE SET token = excluded.token")) {
             statement.setString(1, uuid.toString());
             statement.setInt(2, amount);
-            statement.setInt(3, amount);
             statement.executeUpdate();
         } catch (SQLException e) {
             main.getLogger().severe("Save failed for " + uuid + ": " + e.getMessage());

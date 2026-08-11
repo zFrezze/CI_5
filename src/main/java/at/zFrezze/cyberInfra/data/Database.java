@@ -2,37 +2,36 @@ package at.zFrezze.cyberInfra.data;
 
 import at.zFrezze.cyberInfra.CyberInfra;
 
-import java.sql.*;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 public class Database {
 
     private final CyberInfra main;
     private Connection connection;
 
-    private final String HOST;
-    private final int PORT;
-    private final String DATABASE;
-    private final String USERNAME;
-    private final String PASSWORD;
-
     public Database(CyberInfra main) {
         this.main = main;
-        this.HOST = main.getConfig().getString("database.host");
-        this.PORT = main.getConfig().getInt("database.port");
-        this.DATABASE = main.getConfig().getString("database.database");
-        this.USERNAME = main.getConfig().getString("database.username");
-        this.PASSWORD = main.getConfig().getString("database.password");
     }
 
     public void connect() throws SQLException {
-        connection = DriverManager.getConnection(
-                "jdbc:mysql://" + HOST + ":" + PORT + "/" + DATABASE
-                        + "?sslMode=REQUIRED"
-                        + "&connectTimeout=5000"
-                        + "&socketTimeout=30000",
-                USERNAME, PASSWORD);
+        if (!main.getDataFolder().exists()) {
+            main.getDataFolder().mkdirs();
+        }
+
+        File dbFile = new File(main.getDataFolder(), "database.db");
+        connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute("PRAGMA journal_mode=WAL");
+            stmt.execute("PRAGMA foreign_keys=ON");
+        }
     }
 
     public void createTable() {
@@ -54,7 +53,7 @@ public class Database {
         String rulesSql = "CREATE TABLE IF NOT EXISTS rules_accepted (" +
                 "uuid VARCHAR(36) PRIMARY KEY)";
 
-        try (java.sql.Statement stmt = connection.createStatement()) {
+        try (Statement stmt = connection.createStatement()) {
             stmt.execute(tokensSql);
             stmt.execute(homesSql);
             stmt.execute(rulesSql);
@@ -95,7 +94,7 @@ public class Database {
     }
 
     public void setRulesAccepted(UUID uuid) {
-        String sql = "INSERT IGNORE INTO rules_accepted (uuid) VALUES (?)";
+        String sql = "INSERT OR IGNORE INTO rules_accepted (uuid) VALUES (?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, uuid.toString());
             statement.executeUpdate();

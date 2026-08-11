@@ -125,12 +125,7 @@ public final class CyberInfra extends JavaPlugin {
                 "homes.skin-url",
                 "homes.price-set",
                 "homes.price-remove",
-                "homes.price-teleport",
-                "database.host",
-                "database.port",
-                "database.database",
-                "database.username",
-                "database.password"
+                "homes.price-teleport"
         );
 
         List<String> missing = new ArrayList<>();
