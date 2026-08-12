@@ -7,26 +7,42 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ConfigManager {
 
-    private YamlConfiguration yamlConfiguration;
+    private final CyberInfra main;
+    private final String defaultLanguage;
+    private final Map<String, YamlConfiguration> languages = new HashMap<>();
+    private final List<String> availableLanguages = List.of("en", "de", "au", "ch", "es", "fr");
 
     public ConfigManager(CyberInfra main) {
-        File file = new File(main.getDataFolder(), main.getConfig().getString("language" + ".yml"));
+        this.defaultLanguage = main.getConfig().getString("language");
+        this.main = main;
 
-        if (file.exists()) {
-            yamlConfiguration = YamlConfiguration.loadConfiguration(file);
-        }else {
-            main.getLogger().severe("CyberInfra couldn't start as an invalid language file was selected in config.yml!");
+        for (String lang : availableLanguages) {
+
+            File file = new File(main.getDataFolder(), "lang/" + lang + ".yml");
+            if (!file.exists()) {
+                main.getLogger().warning("Language file " + lang + " doesn't exist!");
+                continue;
+            }
+            languages.put(lang, YamlConfiguration.loadConfiguration(file));
+        }
+        if (!languages.containsKey(defaultLanguage)) {
+            main.getLogger().severe("Default language '" + defaultLanguage + "' could not be loaded!");
             Bukkit.getPluginManager().disablePlugin(main);
-            return;
         }
     }
 
-    public Component getMessage(ConfigMessage message, Map<String, String> placeholders) {
-        String rawMessage =  yamlConfiguration.getString(message.getKey(), "Missing: " + message.getKey());
+    public Component getMessage(ConfigMessage message, Map<String, String> placeholders, String language) {
+        YamlConfiguration lang = languages.get(language);
+        if (lang == null) {
+            lang = languages.get(defaultLanguage);
+        }
+        String rawMessage = lang.getString(message.getKey(), "Missing: " + message.getKey());
         for (Map.Entry<String, String> entry : placeholders.entrySet()) {
             rawMessage = rawMessage.replace("%" + entry.getKey() + "%", entry.getValue());
         }
@@ -34,8 +50,12 @@ public class ConfigManager {
         return LegacyComponentSerializer.legacyAmpersand().deserialize(rawMessage);
     }
 
-    public Component getMessage(ConfigMessage message) {
-        return getMessage(message, Map.of());
+    public Component getMessage(ConfigMessage message, String language) {
+        return getMessage(message, Map.of(), language);
+    }
+
+    public boolean isValidLanguage(String language) {
+        return languages.containsKey(language);
     }
 
 }

@@ -41,8 +41,8 @@ public class InventoryListener implements Listener {
         e.setCancelled(true);
 
         Player player = (Player) e.getWhoClicked();
-        CustomPlayer customPlayer = playerManager.get(player.getUniqueId());
-        if (customPlayer == null) return;
+        CustomPlayer cp = playerManager.get(player.getUniqueId());
+        if (cp == null) return;
 
         switch (e.getRawSlot()) {
             case 11:
@@ -59,30 +59,30 @@ public class InventoryListener implements Listener {
                             player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_NOT_ENOUGH_TOKENS, Map.of(
                                     "price", String.valueOf(price),
                                     "missing", String.valueOf(missing)
-                            )));
+                            ), cp.getLanguage()));
                             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
                             player.closeInventory();
                             return;
                         }
                         playerManager.removeToken(player.getUniqueId(), price);
-                        customPlayer.setHome(pendingHome.getName(), pendingHome.getLocation());
+                        cp.setHome(pendingHome.getName(), pendingHome.getLocation());
                         player.sendActionBar(configManager.getMessage(ConfigMessage.SETHOME_CREATED, Map.of(
                                 "home", pendingHome.getName(),
                                 "price", String.valueOf(price)
-                        )));
+                        ), cp.getLanguage()));
                         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
                     }
                     case REMOVE_HOME -> {
-                        if (customPlayer.getHome(pendingHome.getName()) == null) {
+                        if (cp.getHome(pendingHome.getName()) == null) {
                             player.closeInventory();
                             return;
                         }
                         playerManager.addToken(player.getUniqueId(), price);
-                        customPlayer.removeHome(pendingHome.getName());
+                        cp.removeHome(pendingHome.getName());
                         player.sendActionBar(configManager.getMessage(ConfigMessage.REMOVEHOME_REMOVED, Map.of(
                                 "home", pendingHome.getName(),
                                 "price", String.valueOf(price)
-                        )));
+                        ), cp.getLanguage()));
                         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
                     }
                     case TELEPORT_HOME -> {
@@ -91,14 +91,14 @@ public class InventoryListener implements Listener {
                             player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_NOT_ENOUGH_TOKENS, Map.of(
                                     "price", String.valueOf(price),
                                     "missing", String.valueOf(missing)
-                            )));
+                            ), cp.getLanguage()));
                             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
                             player.closeInventory();
                             return;
                         }
                         playerManager.removeToken(player.getUniqueId(), price);
                         player.teleport(pendingHome.getLocation());
-                        player.sendActionBar(configManager.getMessage(ConfigMessage.HOME_TELEPORTED, Map.of("home", pendingHome.getName())));
+                        player.sendActionBar(configManager.getMessage(ConfigMessage.HOME_TELEPORTED, Map.of("home", pendingHome.getName()), cp.getLanguage()));
                         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
                     }
                 }

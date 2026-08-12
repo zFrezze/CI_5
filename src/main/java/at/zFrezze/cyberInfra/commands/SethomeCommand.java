@@ -56,7 +56,7 @@ public class SethomeCommand implements CommandExecutor {
         boolean isOverride = cp.getHome(name) != null;
 
         if (!isOverride && cp.getHomeAmount() >= 5) {
-            player.sendActionBar(configManager.getMessage(ConfigMessage.SETHOME_MAX_REACHED));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.SETHOME_MAX_REACHED, cp.getLanguage()));
             return true;
         }
 
@@ -70,7 +70,7 @@ public class SethomeCommand implements CommandExecutor {
                     Map.of(
                             "price", String.valueOf(price),
                             "missing", String.valueOf(missing)
-                    )));
+                    ), cp.getLanguage()));
             return true;
         }
 

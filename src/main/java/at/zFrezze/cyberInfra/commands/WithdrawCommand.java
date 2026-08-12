@@ -2,6 +2,7 @@ package at.zFrezze.cyberInfra.commands;
 
 import at.zFrezze.cyberInfra.config.ConfigManager;
 import at.zFrezze.cyberInfra.config.ConfigMessage;
+import at.zFrezze.cyberInfra.data.CustomPlayer;
 import at.zFrezze.cyberInfra.data.PlayerManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -45,21 +46,23 @@ public class WithdrawCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        CustomPlayer cp = playerManager.get(player.getUniqueId());
+
         if (args.length != 1) {
-            player.sendActionBar(configManager.getMessage(ConfigMessage.WITHDRAW_USAGE));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.WITHDRAW_USAGE, cp.getLanguage()));
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
             return true;
         }
 
         Integer amount = parseAmount(args[0]);
         if (amount == null) {
-            player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_INVALID_NUMBER, Map.of("input", args[0])));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_INVALID_NUMBER, Map.of("input", args[0]), cp.getLanguage()));
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
             return true;
         }
 
         if (amount <= 0) {
-            player.sendActionBar(configManager.getMessage(ConfigMessage.WITHDRAW_NOT_POSITIVE));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.WITHDRAW_NOT_POSITIVE, cp.getLanguage()));
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
             return true;
         }
@@ -67,7 +70,7 @@ public class WithdrawCommand implements CommandExecutor, TabCompleter {
         boolean success = playerManager.withdrawToken(player.getUniqueId(), player, amount);
 
         if (!success) {
-            player.sendActionBar(configManager.getMessage(ConfigMessage.WITHDRAW_NO_SPACE));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.WITHDRAW_NO_SPACE, cp.getLanguage()));
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
             return true;
         }
@@ -76,7 +79,7 @@ public class WithdrawCommand implements CommandExecutor, TabCompleter {
         player.sendActionBar(configManager.getMessage(ConfigMessage.WITHDRAW_SUCCESS,
                 Map.of("amount", String.valueOf(amount),
                         "remaining", String.valueOf(remaining)
-                        )));
+                        ), cp.getLanguage()));
         player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1.0f, 1.0f);
 
         return true;

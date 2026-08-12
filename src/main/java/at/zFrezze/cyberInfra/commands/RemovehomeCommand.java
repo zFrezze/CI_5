@@ -41,13 +41,13 @@ public class RemovehomeCommand implements CommandExecutor, TabCompleter {
         if (cp == null) return true;
 
         if (args.length != 1) {
-            player.sendActionBar(configManager.getMessage(ConfigMessage.REMOVEHOME_USAGE));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.REMOVEHOME_USAGE, cp.getLanguage()));
             return true;
         }
 
         if (cp.getHome(args[0]) == null) {
             player.sendActionBar(configManager.getMessage(ConfigMessage.HOME_NOT_EXISTING,
-                    Map.of("home", args[0].toString())));
+                    Map.of("home", args[0].toString()), cp.getLanguage()));
             return true;
         }
 

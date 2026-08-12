@@ -8,6 +8,10 @@ general:
   not-enough-tokens: "&cNot enough tokens! You need %price% (you're missing %missing%)."
   invalid-number: "&cInvalid number: %input%"
 
+language:
+  changed: "&aYou have changed the language to %language%."
+  invalid: "&cThe language you entered doesn't exist."
+
 # Token system (craft / deposit / /token)
 token:
   crafted: "&aYou crafted %amount% Tokens."

@@ -22,6 +22,7 @@ public class PlayerManager {
     private final TokenCraft tokenCraft;
     private final ConcurrentHashMap<UUID, CustomPlayer> players = new ConcurrentHashMap<>();
 
+
     public PlayerManager(CyberInfra main, TokenCraft tokenCraft) {
         this.main = main;
         this.tokenCraft = tokenCraft;
@@ -31,15 +32,18 @@ public class PlayerManager {
         return players.get(uuid);
     }
 
+
     public void loadPlayer(UUID uuid) {
         int token = 0;
+        String language = main.getConfig().getString("language");
         boolean found = false;
 
-        try (PreparedStatement statement = main.getDatabase().getConnection().prepareStatement("SELECT token FROM tokens WHERE uuid = ?")) {
+        try (PreparedStatement statement = main.getDatabase().getConnection().prepareStatement("SELECT token, language FROM tokens WHERE uuid = ?")) {
             statement.setString(1, uuid.toString());
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 token = rs.getInt("token");
+                language = rs.getString("language");
                 found = true;
             }
         } catch (SQLException e) {
@@ -50,7 +54,7 @@ public class PlayerManager {
             token = 100;
         }
 
-        CustomPlayer cp = new CustomPlayer(uuid, token);
+        CustomPlayer cp = new CustomPlayer(uuid, token, language);
         players.put(uuid, cp);
 
         try (PreparedStatement statement = main.getDatabase().getConnection().prepareStatement("SELECT name, world, x, y, z, yaw, pitch FROM homes WHERE uuid = ?")) {
@@ -89,9 +93,10 @@ public class PlayerManager {
         try {
             conn.setAutoCommit(false);
 
-            try (PreparedStatement statement = conn.prepareStatement("INSERT INTO tokens (uuid, token) VALUES (?, ?) ON CONFLICT(uuid) DO UPDATE SET token = excluded.token")) {
+            try (PreparedStatement statement = conn.prepareStatement("INSERT INTO tokens (uuid, token, language) VALUES (?, ?, ?) ON CONFLICT(uuid) DO UPDATE SET token = excluded.token, language = excluded.language")) {
                 statement.setString(1, uuid.toString());
                 statement.setInt(2, cp.getToken());
+                statement.setString(3, cp.getLanguage());
                 statement.executeUpdate();
             }
 

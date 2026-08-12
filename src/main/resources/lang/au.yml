@@ -1,0 +1,55 @@
+# ═══════════════════════════════════════════
+#  CyberInfra — Language file (de_AT, österreichisch)
+# ═══════════════════════════════════════════
+
+# Shared across multiple commands
+general:
+  no-permission: "&cDes derfst net, dazua host du koane Berechtigung."
+  not-enough-tokens: "&cZu wenig Tokens! Du brauchst %price% (dir fehln no %missing%)."
+  invalid-number: "&cDes is koane gültige Zahl: %input%"
+
+# Token system (craft / deposit / /token)
+token:
+  crafted: "&aDu hast %amount% Tokens hergstellt."
+  deposited-one: "&aDu hast 1 Token eizahlt."
+  deposited-many: "&aDu hast %amount% Tokens eizahlt."
+  balance: "&aDu host %amount% Tokens."
+  balance-other: "&a%player% hot %amount% Tokens."
+  usage-invalid: "&cDes passt so net! Nimm /token info|set|add|remove <player> [amount]"
+  usage-sub: "&cSo gehts: /token %sub% <player> <amount>"
+  action-done: "&a%action% is erledigt für %player% (%amount%)."
+
+# Withdraw
+withdraw:
+  usage: "&cSo gehts: /withdraw <amount>"
+  not-positive: "&cDie Zahl muass größer als null sein."
+  no-space: "&cDu host ned gnua Tokens oder koan Platz im Inventar!"
+  success: "&aHost %amount% Tokens obghobn. Kontostand: %remaining%"
+
+# Home — teleport (/home)
+home:
+  usage: "&cDes passt so net! Schreib /home <Home>"
+  not-existing: "&c%home% gibts net!"
+  teleported: "&aBist erfolgreich zu %home% hinteleportiert worn."
+
+# Sethome
+sethome:
+  usage: "&cDes passt so net! /sethome <name>"
+  max-reached: "&cDu host scho des Maximum an Homes erreicht!"
+  created: "&a%home% is erfolgreich ogleg worn! (-%price% Tokens)"
+
+# Removehome
+removehome:
+  usage: "&cDes passt so net! /removehome <name>"
+  removed: "&a%home% is erfolgreich glöscht worn! (+%price% Tokens)"
+
+# Confirm GUI (item names, title, lore)
+gui:
+  confirm: "&aPasst"
+  cancel: "&cLos ma sei"
+  title: "&fWüst des Home &a%home% &fwirklich %action%?"
+  price: "&f%price-label%: &a%price%"
+  world: "&7Welt: &f%world%"
+  coord-x: "&7x: &f%x%"
+  coord-y: "&7y: &f%y%"
+  coord-z: "&7z: &f%z%"

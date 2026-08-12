@@ -1,0 +1,55 @@
+# ═══════════════════════════════════════════
+#  CyberInfra — Language file (de_CH, schwiizerdütsch)
+# ═══════════════════════════════════════════
+
+# Shared across multiple commands
+general:
+  no-permission: "&cDas dörfsch ned, defür hesch kei Berächtigung."
+  not-enough-tokens: "&cNed gnueg Tokens! Du bruuchsch %price% (dir fehled na %missing%)."
+  invalid-number: "&cDas isch kei gültigi Zahl: %input%"
+
+# Token system (craft / deposit / /token)
+token:
+  crafted: "&aDu hesch %amount% Tokens hergstellt."
+  deposited-one: "&aDu hesch 1 Token yzahlt."
+  deposited-many: "&aDu hesch %amount% Tokens yzahlt."
+  balance: "&aDu hesch %amount% Tokens."
+  balance-other: "&a%player% het %amount% Tokens."
+  usage-invalid: "&cDas gaht so ned! Nimm /token info|set|add|remove <player> [amount]"
+  usage-sub: "&cSo gahts: /token %sub% <player> <amount>"
+  action-done: "&a%action% isch erledigt für %player% (%amount%)."
+
+# Withdraw
+withdraw:
+  usage: "&cSo gahts: /withdraw <amount>"
+  not-positive: "&cD'Zahl muess grösser als null si."
+  no-space: "&cDu hesch ned gnueg Tokens oder kei Platz im Inventar!"
+  success: "&aHesch %amount% Tokens abghebt. Kontostand: %remaining%"
+
+# Home — teleport (/home)
+home:
+  usage: "&cDas gaht so ned! Schrib /home <Home>"
+  not-existing: "&c%home% git's ned!"
+  teleported: "&aBisch erfolgriich zu %home% hin teleportiert worde."
+
+# Sethome
+sethome:
+  usage: "&cDas gaht so ned! /sethome <name>"
+  max-reached: "&cDu hesch scho s'Maximum a Homes erreicht!"
+  created: "&a%home% isch erfolgriich agleit worde! (-%price% Tokens)"
+
+# Removehome
+removehome:
+  usage: "&cDas gaht so ned! /removehome <name>"
+  removed: "&a%home% isch erfolgriich glöscht worde! (+%price% Tokens)"
+
+# Confirm GUI (item names, title, lore)
+gui:
+  confirm: "&aPasst"
+  cancel: "&cAbbräche"
+  title: "&fWosch das Home &a%home% &fwürkli %action%?"
+  price: "&f%price-label%: &a%price%"
+  world: "&7Wält: &f%world%"
+  coord-x: "&7x: &f%x%"
+  coord-y: "&7y: &f%y%"
+  coord-z: "&7z: &f%z%"

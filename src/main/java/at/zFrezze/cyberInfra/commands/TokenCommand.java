@@ -2,9 +2,8 @@ package at.zFrezze.cyberInfra.commands;
 
 import at.zFrezze.cyberInfra.config.ConfigManager;
 import at.zFrezze.cyberInfra.config.ConfigMessage;
+import at.zFrezze.cyberInfra.data.CustomPlayer;
 import at.zFrezze.cyberInfra.data.PlayerManager;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -78,10 +77,12 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        CustomPlayer cp = playerManager.get(player.getUniqueId());
+
         if (args.length == 0) {
             int amount = playerManager.getToken(player.getUniqueId());
             player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_BALANCE,
-                    Map.of("amount", String.valueOf(amount))));
+                    Map.of("amount", String.valueOf(amount)), cp.getLanguage()));
             return true;
         }
 
@@ -95,26 +96,26 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
                             Map.of(
                                     "player", target.getName(),
                                     "amount", String.valueOf(amount)
-                    )));
+                    ), cp.getLanguage()));
                 } else {
                     int amount = playerManager.getToken(player.getUniqueId());
                     player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_BALANCE,
-                            Map.of("amount", String.valueOf(amount))));
+                            Map.of("amount", String.valueOf(amount)), cp.getLanguage()));
                 }
             }
 
             case "set", "add", "remove" -> {
                 if (!player.hasPermission("ci.admin") && !player.hasPermission("ci.tokens.admin")) {
-                    player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_NO_PERMISSION));
+                    player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_NO_PERMISSION, cp.getLanguage()));
                     return true;
                 }
                 if (args.length != 3) {
-                    player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_USAGE_SUB, Map.of("sub", args[0].toLowerCase())));
+                    player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_USAGE_SUB, Map.of("sub", args[0].toLowerCase()), cp.getLanguage()));
                     return true;
                 }
                 Integer amount = parseAmount(args[2]);
                 if (amount == null) {
-                    player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_INVALID_NUMBER, Map.of("input", args[2])));
+                    player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_INVALID_NUMBER, Map.of("input", args[2]), cp.getLanguage()));
                     return true;
                 }
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
@@ -126,7 +127,7 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
                 player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_ACTION_DONE, Map.of(
                         "action", args[0].toLowerCase(),
                         "player", target.getName(),
-                        "amount", String.valueOf(amount))));
+                        "amount", String.valueOf(amount)), cp.getLanguage()));
             }
 
             default -> {
@@ -134,9 +135,9 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
                 if (!isAdmin) {
                     int amount = playerManager.getToken(player.getUniqueId());
                     player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_BALANCE,
-                            Map.of("amount", String.valueOf(amount))));
+                            Map.of("amount", String.valueOf(amount)), cp.getLanguage()));
                 } else {
-                    player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_USAGE_INVALID));
+                    player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_USAGE_INVALID, cp.getLanguage()));
                 }
             }
         }

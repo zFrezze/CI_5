@@ -33,7 +33,13 @@ public final class CyberInfra extends JavaPlugin {
     public void onEnable() {
 
         saveDefaultConfig();
-        saveResource("en.yml", false);
+        saveResource("lang/en.yml", false);
+        saveResource("lang/de.yml", false);
+        saveResource("lang/au.yml", false);
+        saveResource("lang/fr.yml", false);
+        saveResource("lang/es.yml", false);
+        saveResource("lang/ch.yml", false);
+
 
         configManager = new ConfigManager(this);
 
@@ -90,6 +96,10 @@ public final class CyberInfra extends JavaPlugin {
         HomeCommand homeCommand = new HomeCommand(confirmGUI, playerManager, this, configManager);
         getCommand("home").setExecutor(homeCommand);
         getCommand("home").setTabCompleter(homeCommand);
+
+        LanguageCommand languageCommand = new LanguageCommand(configManager, playerManager);
+        getCommand("language").setExecutor(languageCommand);
+        getCommand("language").setTabCompleter(languageCommand);
 
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> playerManager.saveAll(), 2400L, 2400L);
     }

@@ -7,6 +7,10 @@ public enum ConfigMessage {
     GENERAL_NOT_ENOUGH_TOKENS("general.not-enough-tokens"),
     GENERAL_INVALID_NUMBER("general.invalid-number"),
 
+    LANGUAGE_INVALID("language.invalid"),
+    LANGUAGE_CHANGED("language.changed"),
+
+
     //Token system
     TOKEN_CRAFTED("token.crafted"),
     TOKEN_DEPOSITED_ONE("token.deposited-one"),

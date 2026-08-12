@@ -14,6 +14,9 @@ commands:
   sethome:
   removehome:
   home:
+  language:
+    description: Change your language
+    usage: /language [lang]
 permissions:
   ci.admin:
     description: Full admin access

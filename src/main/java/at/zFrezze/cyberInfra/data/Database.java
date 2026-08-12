@@ -37,7 +37,8 @@ public class Database {
     public void createTable() {
         String tokensSql = "CREATE TABLE IF NOT EXISTS tokens (" +
                 "uuid VARCHAR(36) PRIMARY KEY, " +
-                "token INT NOT NULL DEFAULT 0)";
+                "token INT NOT NULL DEFAULT 0, " +
+                "language VARCHAR(8) NOT NULL DEFAULT 'en')";
 
         String homesSql = "CREATE TABLE IF NOT EXISTS homes (" +
                 "uuid VARCHAR(36) NOT NULL, " +

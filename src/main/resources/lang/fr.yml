@@ -1,0 +1,55 @@
+# ═══════════════════════════════════════════
+#  CyberInfra — Language file (fr_FR)
+# ═══════════════════════════════════════════
+
+# Shared across multiple commands
+general:
+  no-permission: "&cTu n'as pas la permission de faire ça."
+  not-enough-tokens: "&cPas assez de jetons ! Il te faut %price% (il t'en manque %missing%)."
+  invalid-number: "&cNombre invalide : %input%"
+
+# Token system (craft / deposit / /token)
+token:
+  crafted: "&aTu as fabriqué %amount% jetons."
+  deposited-one: "&aTu as déposé 1 jeton."
+  deposited-many: "&aTu as déposé %amount% jetons."
+  balance: "&aTu as %amount% jetons."
+  balance-other: "&a%player% a %amount% jetons."
+  usage-invalid: "&cUtilisation invalide ! Utilise /token info|set|add|remove <player> [amount]"
+  usage-sub: "&cUtilisation : /token %sub% <player> <amount>"
+  action-done: "&a%action% effectué pour %player% (%amount%)."
+
+# Withdraw
+withdraw:
+  usage: "&cUtilisation : /withdraw <amount>"
+  not-positive: "&cLe montant doit être positif."
+  no-space: "&cTu n'as pas assez de jetons ou pas de place dans ton inventaire !"
+  success: "&a%amount% jetons retirés. Solde : %remaining%"
+
+# Home — teleport (/home)
+home:
+  usage: "&cUtilisation invalide ! Utilise /home <Home>"
+  not-existing: "&c%home% n'existe pas !"
+  teleported: "&aTéléportation vers %home% réussie."
+
+# Sethome
+sethome:
+  usage: "&cUtilisation invalide ! /sethome <name>"
+  max-reached: "&cTu as atteint le nombre maximum de homes !"
+  created: "&a%home% créé avec succès ! (-%price% jetons)"
+
+# Removehome
+removehome:
+  usage: "&cUtilisation invalide ! /removehome <name>"
+  removed: "&a%home% supprimé avec succès ! (+%price% jetons)"
+
+# Confirm GUI (item names, title, lore)
+gui:
+  confirm: "&aConfirmer"
+  cancel: "&cAnnuler"
+  title: "&fVeux-tu vraiment %action% le home &a%home%&f ?"
+  price: "&f%price-label% : &a%price%"
+  world: "&7Monde : &f%world%"
+  coord-x: "&7x : &f%x%"
+  coord-y: "&7y : &f%y%"
+  coord-z: "&7z : &f%z%"

@@ -1,0 +1,55 @@
+# ═══════════════════════════════════════════
+#  CyberInfra — Language file (de_DE, Standarddeutsch)
+# ═══════════════════════════════════════════
+
+# Shared across multiple commands
+general:
+  no-permission: "&cDazu hast du keine Berechtigung."
+  not-enough-tokens: "&cNicht genug Tokens! Du brauchst %price% (dir fehlen noch %missing%)."
+  invalid-number: "&cUngültige Zahl: %input%"
+
+# Token system (craft / deposit / /token)
+token:
+  crafted: "&aDu hast %amount% Tokens hergestellt."
+  deposited-one: "&aDu hast 1 Token eingezahlt."
+  deposited-many: "&aDu hast %amount% Tokens eingezahlt."
+  balance: "&aDu hast %amount% Tokens."
+  balance-other: "&a%player% hat %amount% Tokens."
+  usage-invalid: "&cUngültige Verwendung! Nutze /token info|set|add|remove <player> [amount]"
+  usage-sub: "&cVerwendung: /token %sub% <player> <amount>"
+  action-done: "&a%action% wurde für %player% durchgeführt (%amount%)."
+
+# Withdraw
+withdraw:
+  usage: "&cVerwendung: /withdraw <amount>"
+  not-positive: "&cDer Betrag muss positiv sein."
+  no-space: "&cDu hast nicht genug Tokens oder keinen Platz im Inventar!"
+  success: "&a%amount% Tokens abgehoben. Kontostand: %remaining%"
+
+# Home — teleport (/home)
+home:
+  usage: "&cUngültige Verwendung! Nutze /home <Home>"
+  not-existing: "&c%home% existiert nicht!"
+  teleported: "&aErfolgreich zu %home% teleportiert."
+
+# Sethome
+sethome:
+  usage: "&cUngültige Verwendung! /sethome <name>"
+  max-reached: "&cDu hast die maximale Anzahl an Homes erreicht!"
+  created: "&a%home% wurde erfolgreich erstellt! (-%price% Tokens)"
+
+# Removehome
+removehome:
+  usage: "&cUngültige Verwendung! /removehome <name>"
+  removed: "&a%home% wurde erfolgreich entfernt! (+%price% Tokens)"
+
+# Confirm GUI (item names, title, lore)
+gui:
+  confirm: "&aBestätigen"
+  cancel: "&cAbbrechen"
+  title: "&fMöchtest du das Home &a%home% &fwirklich %action%?"
+  price: "&f%price-label%: &a%price%"
+  world: "&7Welt: &f%world%"
+  coord-x: "&7x: &f%x%"
+  coord-y: "&7y: &f%y%"
+  coord-z: "&7z: &f%z%"

@@ -3,9 +3,8 @@ package at.zFrezze.cyberInfra.listeners;
 import at.zFrezze.cyberInfra.TokenCraft;
 import at.zFrezze.cyberInfra.config.ConfigManager;
 import at.zFrezze.cyberInfra.config.ConfigMessage;
+import at.zFrezze.cyberInfra.data.CustomPlayer;
 import at.zFrezze.cyberInfra.data.PlayerManager;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
@@ -23,7 +22,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.plugin.Plugin;
 
 import java.util.Map;
 import java.util.Set;
@@ -106,9 +104,13 @@ public class TokenListener implements Listener {
 
         int total = count * TOKENS_PER_CRAFT;
         playerManager.addToken(player.getUniqueId(), total);
-        player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_CRAFTED, Map.of(
-                "amount", String.valueOf(total)
-        )));
+
+        CustomPlayer cp = playerManager.get(player.getUniqueId());
+        if (cp != null) {
+            player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_CRAFTED, Map.of(
+                    "amount", String.valueOf(total)
+            ), cp.getLanguage()));
+        }
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
 
         inv.setMatrix(next);
@@ -155,19 +157,23 @@ public class TokenListener implements Listener {
         e.setCancelled(true);
 
         Player player = e.getPlayer();
+        CustomPlayer cp = playerManager.get(player.getUniqueId());
+        if (cp == null) {
+            return;
+        }
         int stackAmount = item.getAmount();
 
         if (player.isSneaking()) {
             item.setAmount(stackAmount - 1);
             player.getInventory().setItemInMainHand(item.getAmount() > 0 ? item : null);
             playerManager.addToken(player.getUniqueId(), 1);
-            player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_DEPOSITED_ONE));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_DEPOSITED_ONE, cp.getLanguage()));
         } else {
             player.getInventory().setItemInMainHand(null);
             playerManager.addToken(player.getUniqueId(), stackAmount);
             player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_DEPOSITED_MANY, Map.of(
                     "amount", String.valueOf(stackAmount)
-            )));
+            ), cp.getLanguage()));
         }
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
     }
