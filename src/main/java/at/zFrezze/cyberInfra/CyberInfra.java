@@ -1,13 +1,14 @@
 package at.zFrezze.cyberInfra;
 
 import at.zFrezze.cyberInfra.commands.*;
+import at.zFrezze.cyberInfra.config.ConfigManager;
 import at.zFrezze.cyberInfra.data.Database;
 import at.zFrezze.cyberInfra.data.PlayerManager;
+import at.zFrezze.cyberInfra.gui.ConfirmGUI;
 import at.zFrezze.cyberInfra.listeners.DeathListener;
 import at.zFrezze.cyberInfra.listeners.InventoryListener;
 import at.zFrezze.cyberInfra.listeners.JoinListener;
 import at.zFrezze.cyberInfra.listeners.TokenListener;
-import at.zFrezze.cyberInfra.gui.ConfirmGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -23,6 +24,7 @@ public final class CyberInfra extends JavaPlugin {
     private PlayerManager playerManager;
     private Database database;
     private ConfirmGUI confirmGUI;
+    private ConfigManager configManager;
 
     public static final String CONFIRM_GUI_TITLE = ChatColor.DARK_GRAY + "Confirmation";
 
@@ -31,6 +33,9 @@ public final class CyberInfra extends JavaPlugin {
     public void onEnable() {
 
         saveDefaultConfig();
+        saveResource("en.yml", false);
+
+        configManager = new ConfigManager(this);
 
         if (!validateConfig()) {
             getLogger().severe("Config not full — Plugin will get deactivated.");
@@ -86,7 +91,7 @@ public final class CyberInfra extends JavaPlugin {
         getCommand("home").setExecutor(homeCommand);
         getCommand("home").setTabCompleter(homeCommand);
 
-        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> playerManager.saveAll(), 6000L, 6000L);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> playerManager.saveAll(), 2400L, 2400L);
     }
 
     public Database getDatabase() {
@@ -109,7 +114,10 @@ public final class CyberInfra extends JavaPlugin {
         return getSetHomePrice() - getRemoveHomePrice();
     }
 
-    public int getTeleportHomePrice() {return getConfig().getInt("homes.price-teleport");}
+    public int getTeleportHomePrice() {
+        return getConfig().getInt("homes.price-teleport");
+    }
+    public ConfigManager getConfigManager() {return configManager;}
 
     @Override
     public void onDisable() {

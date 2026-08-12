@@ -1,0 +1,54 @@
+# ═══════════════════════════════════════════
+#  CyberInfra — Language file (en)
+# ═══════════════════════════════════════════
+
+# Shared across multiple commands
+general:
+  no-permission: "&cYou don't have permission to do that."
+  not-enough-tokens: "&cNot enough tokens! You need %price% (you're missing %missing%)."
+  invalid-number: "&cInvalid number: %input%"
+
+# Token system (craft / deposit / /token)
+token:
+  crafted: "&aYou crafted %amount% Tokens."
+  deposited-one: "&aYou have deposited 1 token."
+  deposited-many: "&aYou have deposited %amount% Tokens."
+  balance: "&aYou have %amount% tokens."
+  balance-other: "&a%player% has %amount% tokens."
+  usage-invalid: "&cInvalid usage! Use /token info|set|add|remove <player> [amount]"
+  usage-sub: "&cUsage: /token %sub%"
+
+# Withdraw
+withdraw:
+  usage: "&cUsage: /withdraw <amount>"
+  not-positive: "&cAmount must be positive."
+  no-space: "&cYou don't have enough tokens or inventory space!"
+  success: "&aWithdrew %amount% tokens. Balance: %remaining%"
+
+# Home — teleport (/home)
+home:
+  usage: "&cInvalid usage! You need to use /home <Home>"
+  not-existing: "&c%home% doesn't exist!"
+  teleported: "&aSuccessfully teleported to %home%."
+
+# Sethome
+sethome:
+  usage: "&cInvalid usage! /sethome <name>"
+  max-reached: "&cYou have reached the maximum amount of homes!"
+  created: "&a%home% successfully created! (-%price% tokens)"
+
+# Removehome
+removehome:
+  usage: "&cInvalid usage! /removehome <name>"
+  removed: "&a%home% successfully removed! (+%price% tokens)"
+
+# Confirm GUI (item names, title, lore)
+gui:
+  confirm: "&aConfirm"
+  cancel: "&cCancel"
+  title: "&fConfirm to %action% home &a%home%&f?"
+  price: "&f%price-label%: &a%price%"
+  world: "&7World: &f%world%"
+  coord-x: "&7x: &f%x%"
+  coord-y: "&7y: &f%y%"
+  coord-z: "&7z: &f%z%"
