@@ -1,6 +1,8 @@
 package at.zFrezze.cyberInfra.commands;
 
 import at.zFrezze.cyberInfra.CyberInfra;
+import at.zFrezze.cyberInfra.config.ConfigManager;
+import at.zFrezze.cyberInfra.config.ConfigMessage;
 import at.zFrezze.cyberInfra.data.CustomPlayer;
 import at.zFrezze.cyberInfra.data.PlayerManager;
 import at.zFrezze.cyberInfra.gui.ConfirmGUI;
@@ -17,17 +19,20 @@ import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class HomeCommand implements CommandExecutor, TabCompleter {
 
     private final PlayerManager playerManager;
     private final CyberInfra main;
     private final ConfirmGUI confirmGUI;
+    private final ConfigManager configManager;
 
-    public HomeCommand(ConfirmGUI confirmGUI, PlayerManager playerManager, CyberInfra main) {
+    public HomeCommand(ConfirmGUI confirmGUI, PlayerManager playerManager, CyberInfra main, ConfigManager configManager) {
         this.confirmGUI = confirmGUI;
         this.playerManager = playerManager;
         this.main = main;
+        this.configManager = configManager;
     }
 
     @Override
@@ -39,13 +44,13 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
         if (customPlayer == null) return true;
 
         if (args.length != 1) {
-            player.sendActionBar(Component.text("Invalid usage! You need to use /home <Home>", NamedTextColor.RED));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.HOME_USAGE));
             return true;
         }
 
         Location home = customPlayer.getHome(args[0]);
         if (home == null) {
-            player.sendActionBar(Component.text(args[0] + " doesn't exist!", NamedTextColor.RED));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.HOME_NOT_EXISTING, Map.of("home", args[0].toString())));
             return true;
         }
 
@@ -53,7 +58,10 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
         int balance = playerManager.getToken(player.getUniqueId());
         if (balance < price) {
             int missing = price - balance;
-            player.sendActionBar(Component.text("Not enough tokens! You need " + price + " (you're missing " + missing + ").", NamedTextColor.RED));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_NOT_ENOUGH_TOKENS,
+                    Map.of(
+                            "price", String.valueOf(price),
+                            "missing", String.valueOf(missing))));
             return true;
         }
         confirmGUI.openGUI(player, HomeActions.TELEPORT_HOME, args[0], home, price, CyberInfra.CONFIRM_GUI_TITLE);

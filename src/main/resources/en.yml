@@ -16,8 +16,9 @@ token:
   balance: "&aYou have %amount% tokens."
   balance-other: "&a%player% has %amount% tokens."
   usage-invalid: "&cInvalid usage! Use /token info|set|add|remove <player> [amount]"
-  usage-sub: "&cUsage: /token %sub%"
-
+  usage-sub: "&cUsage: /token %sub% <player> <amount>"
+  action-done: "&a%action% done for %player% (%amount%)."
+  
 # Withdraw
 withdraw:
   usage: "&cUsage: /withdraw <amount>"

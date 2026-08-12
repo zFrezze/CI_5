@@ -69,25 +69,25 @@ public final class CyberInfra extends JavaPlugin {
         }
 
         Bukkit.getPluginManager().registerEvents(new JoinListener(this, playerManager), this);
-        Bukkit.getPluginManager().registerEvents(new TokenListener(playerManager, tokenCraft), this);
+        Bukkit.getPluginManager().registerEvents(new TokenListener(playerManager, tokenCraft, configManager), this);
         Bukkit.getPluginManager().registerEvents(new DeathListener(), this);
-        Bukkit.getPluginManager().registerEvents(new InventoryListener(confirmGUI, playerManager), this);
+        Bukkit.getPluginManager().registerEvents(new InventoryListener(confirmGUI, playerManager, configManager), this);
 
-        TokenCommand tokenCommand = new TokenCommand(playerManager);
+        TokenCommand tokenCommand = new TokenCommand(playerManager, configManager);
         getCommand("token").setExecutor(tokenCommand);
         getCommand("token").setTabCompleter(tokenCommand);
 
-        WithdrawCommand withdrawCommand = new WithdrawCommand(playerManager);
+        WithdrawCommand withdrawCommand = new WithdrawCommand(playerManager, configManager);
         getCommand("withdraw").setExecutor(withdrawCommand);
         getCommand("withdraw").setTabCompleter(withdrawCommand);
 
-        getCommand("sethome").setExecutor(new SethomeCommand(playerManager, this, confirmGUI));
+        getCommand("sethome").setExecutor(new SethomeCommand(playerManager, this, confirmGUI, configManager));
 
-        RemovehomeCommand removehomeCommand = new RemovehomeCommand(playerManager, this, confirmGUI);
+        RemovehomeCommand removehomeCommand = new RemovehomeCommand(playerManager, this, confirmGUI, configManager);
         getCommand("removehome").setExecutor(removehomeCommand);
         getCommand("removehome").setTabCompleter(removehomeCommand);
 
-        HomeCommand homeCommand = new HomeCommand(confirmGUI, playerManager, this);
+        HomeCommand homeCommand = new HomeCommand(confirmGUI, playerManager, this, configManager);
         getCommand("home").setExecutor(homeCommand);
         getCommand("home").setTabCompleter(homeCommand);
 

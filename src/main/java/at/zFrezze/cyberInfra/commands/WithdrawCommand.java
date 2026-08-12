@@ -1,5 +1,7 @@
 package at.zFrezze.cyberInfra.commands;
 
+import at.zFrezze.cyberInfra.config.ConfigManager;
+import at.zFrezze.cyberInfra.config.ConfigMessage;
 import at.zFrezze.cyberInfra.data.PlayerManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -15,13 +17,16 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class WithdrawCommand implements CommandExecutor, TabCompleter {
 
     private final PlayerManager playerManager;
+    private final ConfigManager configManager;
 
-    public WithdrawCommand(PlayerManager playerManager) {
+    public WithdrawCommand(PlayerManager playerManager, ConfigManager configManager) {
         this.playerManager = playerManager;
+        this.configManager = configManager;
     }
 
     private Integer parseAmount(String arg) {
@@ -41,20 +46,20 @@ public class WithdrawCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length != 1) {
-            player.sendActionBar(Component.text("Usage: /withdraw <amount>", NamedTextColor.RED));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.WITHDRAW_USAGE));
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
             return true;
         }
 
         Integer amount = parseAmount(args[0]);
         if (amount == null) {
-            player.sendActionBar(Component.text("Invalid number: " + args[0], NamedTextColor.RED));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_INVALID_NUMBER, Map.of("input", args[0])));
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
             return true;
         }
 
         if (amount <= 0) {
-            player.sendActionBar(Component.text("Amount must be positive.", NamedTextColor.RED));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.WITHDRAW_NOT_POSITIVE));
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
             return true;
         }
@@ -62,13 +67,16 @@ public class WithdrawCommand implements CommandExecutor, TabCompleter {
         boolean success = playerManager.withdrawToken(player.getUniqueId(), player, amount);
 
         if (!success) {
-            player.sendActionBar(Component.text("You don't have enough tokens or inventory space!", NamedTextColor.RED));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.WITHDRAW_NO_SPACE));
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
             return true;
         }
 
         int remaining = playerManager.getToken(player.getUniqueId());
-        player.sendActionBar(Component.text("Withdrew " + amount + " tokens. Balance: " + remaining, NamedTextColor.GREEN));
+        player.sendActionBar(configManager.getMessage(ConfigMessage.WITHDRAW_SUCCESS,
+                Map.of("amount", String.valueOf(amount),
+                        "remaining", String.valueOf(remaining)
+                        )));
         player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1.0f, 1.0f);
 
         return true;

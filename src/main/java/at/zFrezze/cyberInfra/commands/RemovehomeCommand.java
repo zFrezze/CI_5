@@ -1,6 +1,8 @@
 package at.zFrezze.cyberInfra.commands;
 
 import at.zFrezze.cyberInfra.CyberInfra;
+import at.zFrezze.cyberInfra.config.ConfigManager;
+import at.zFrezze.cyberInfra.config.ConfigMessage;
 import at.zFrezze.cyberInfra.data.CustomPlayer;
 import at.zFrezze.cyberInfra.data.PlayerManager;
 import at.zFrezze.cyberInfra.gui.ConfirmGUI;
@@ -16,16 +18,19 @@ import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class RemovehomeCommand implements CommandExecutor, TabCompleter {
     private final PlayerManager playerManager;
     private final CyberInfra main;
     private final ConfirmGUI confirmGUI;
+    private final ConfigManager configManager;
 
-    public RemovehomeCommand(PlayerManager playerManager, CyberInfra main, ConfirmGUI confirmGUI) {
+    public RemovehomeCommand(PlayerManager playerManager, CyberInfra main, ConfirmGUI confirmGUI, ConfigManager configManager) {
         this.playerManager = playerManager;
         this.main = main;
         this.confirmGUI = confirmGUI;
+        this.configManager = configManager;
     }
 
     @Override
@@ -36,12 +41,13 @@ public class RemovehomeCommand implements CommandExecutor, TabCompleter {
         if (cp == null) return true;
 
         if (args.length != 1) {
-            player.sendActionBar(Component.text("Invalid usage! /removehome <name>", NamedTextColor.RED));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.REMOVEHOME_USAGE));
             return true;
         }
 
         if (cp.getHome(args[0]) == null) {
-            player.sendActionBar(Component.text(args[0] + " doesn't exist!", NamedTextColor.RED));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.HOME_NOT_EXISTING,
+                    Map.of("home", args[0].toString())));
             return true;
         }
 

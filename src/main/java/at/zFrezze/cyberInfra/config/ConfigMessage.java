@@ -15,6 +15,7 @@ public enum ConfigMessage {
     TOKEN_BALANCE_OTHER("token.balance-other"),
     TOKEN_USAGE_INVALID("token.usage-invalid"),
     TOKEN_USAGE_SUB("token.usage-sub"),
+    TOKEN_ACTION_DONE("token.action-done"),
 
     //Withdraw
     WITHDRAW_USAGE("withdraw.usage"),

@@ -1,5 +1,7 @@
 package at.zFrezze.cyberInfra.commands;
 
+import at.zFrezze.cyberInfra.config.ConfigManager;
+import at.zFrezze.cyberInfra.config.ConfigMessage;
 import at.zFrezze.cyberInfra.data.PlayerManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -15,12 +17,16 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class TokenCommand implements CommandExecutor, TabCompleter {
 
     private final PlayerManager playerManager;
+    private final ConfigManager configManager;
 
-    public TokenCommand(PlayerManager playerManager) {this.playerManager = playerManager;}
+    public TokenCommand(PlayerManager playerManager, ConfigManager configManager) {this.playerManager = playerManager;
+        this.configManager = configManager;
+    }
 
     private Integer parseAmount(String arg) {
         try {
@@ -74,7 +80,8 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
 
         if (args.length == 0) {
             int amount = playerManager.getToken(player.getUniqueId());
-            player.sendActionBar(Component.text("You have " + amount + " tokens.", NamedTextColor.GREEN));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_BALANCE,
+                    Map.of("amount", String.valueOf(amount))));
             return true;
         }
 
@@ -84,25 +91,30 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
                 if (args.length >= 2 && player.hasPermission("ci.tokens.others")) {
                     OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
                     int amount = playerManager.getToken(target.getUniqueId());
-                    player.sendActionBar(Component.text(target.getName() + " has " + amount + " tokens.", NamedTextColor.GREEN));
+                    player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_BALANCE_OTHER,
+                            Map.of(
+                                    "player", target.getName(),
+                                    "amount", String.valueOf(amount)
+                    )));
                 } else {
                     int amount = playerManager.getToken(player.getUniqueId());
-                    player.sendActionBar(Component.text("You have " + amount + " tokens.", NamedTextColor.GREEN));
+                    player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_BALANCE,
+                            Map.of("amount", String.valueOf(amount))));
                 }
             }
 
             case "set", "add", "remove" -> {
                 if (!player.hasPermission("ci.admin") && !player.hasPermission("ci.tokens.admin")) {
-                    player.sendActionBar(Component.text("You don't have permission to do that.", NamedTextColor.RED));
+                    player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_NO_PERMISSION));
                     return true;
                 }
                 if (args.length != 3) {
-                    player.sendActionBar(Component.text("Usage: /token " + args[0].toLowerCase() + " <player> <amount>", NamedTextColor.RED));
+                    player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_USAGE_SUB, Map.of("sub", args[0].toLowerCase())));
                     return true;
                 }
                 Integer amount = parseAmount(args[2]);
                 if (amount == null) {
-                    player.sendActionBar(Component.text("Invalid number: " + args[2], NamedTextColor.RED));
+                    player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_INVALID_NUMBER, Map.of("input", args[2])));
                     return true;
                 }
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
@@ -111,16 +123,20 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
                     case "add" -> playerManager.addToken(target.getUniqueId(), amount);
                     case "remove" -> playerManager.removeToken(target.getUniqueId(), amount);
                 }
-                player.sendActionBar(Component.text(args[0].toLowerCase() + " done for " + target.getName() + " (" + amount + ").", NamedTextColor.GREEN));
+                player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_ACTION_DONE, Map.of(
+                        "action", args[0].toLowerCase(),
+                        "player", target.getName(),
+                        "amount", String.valueOf(amount))));
             }
 
             default -> {
                 boolean isAdmin = player.hasPermission("ci.admin") || player.hasPermission("ci.tokens.admin");
                 if (!isAdmin) {
                     int amount = playerManager.getToken(player.getUniqueId());
-                    player.sendActionBar(Component.text("You have " + amount + " tokens.", NamedTextColor.GREEN));
+                    player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_BALANCE,
+                            Map.of("amount", String.valueOf(amount))));
                 } else {
-                    player.sendActionBar(Component.text("Invalid usage! Use /token info|set|add|remove <player> [amount]", NamedTextColor.RED));
+                    player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_USAGE_INVALID));
                 }
             }
         }

@@ -1,5 +1,7 @@
 package at.zFrezze.cyberInfra.commands;
 
+import at.zFrezze.cyberInfra.config.ConfigManager;
+import at.zFrezze.cyberInfra.config.ConfigMessage;
 import at.zFrezze.cyberInfra.gui.ConfirmGUI;
 import at.zFrezze.cyberInfra.CyberInfra;
 import at.zFrezze.cyberInfra.gui.HomeActions;
@@ -12,16 +14,20 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Map;
+
 public class SethomeCommand implements CommandExecutor {
 
     private final PlayerManager playerManager;
     private final CyberInfra main;
     private final ConfirmGUI confirmGUI;
+    private final ConfigManager configManager;
 
-    public SethomeCommand(PlayerManager playerManager, CyberInfra main, ConfirmGUI confirmGUI) {
+    public SethomeCommand(PlayerManager playerManager, CyberInfra main, ConfirmGUI confirmGUI, ConfigManager configManager) {
         this.playerManager = playerManager;
         this.main = main;
         this.confirmGUI = confirmGUI;
+        this.configManager = configManager;
     }
 
     @Override
@@ -32,7 +38,7 @@ public class SethomeCommand implements CommandExecutor {
         if (cp == null) return true;
 
         if (args.length >= 2) {
-            player.sendActionBar(Component.text("Invalid usage! /sethome <name>", NamedTextColor.RED));
+            player.sendActionBar();
             return true;
         }
 
@@ -50,7 +56,7 @@ public class SethomeCommand implements CommandExecutor {
         boolean isOverride = cp.getHome(name) != null;
 
         if (!isOverride && cp.getHomeAmount() >= 5) {
-            player.sendActionBar(Component.text("You have reached the maximum amount of homes!", NamedTextColor.RED));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.SETHOME_MAX_REACHED));
             return true;
         }
 
@@ -60,7 +66,11 @@ public class SethomeCommand implements CommandExecutor {
         int balance = playerManager.getToken(player.getUniqueId());
         if (balance < price) {
             int missing = price - balance;
-            player.sendActionBar(Component.text("Not enough tokens! You need " + price + " (you're missing " + missing + ").", NamedTextColor.RED));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_NOT_ENOUGH_TOKENS,
+                    Map.of(
+                            "price", String.valueOf(price),
+                            "missing", String.valueOf(missing)
+                    )));
             return true;
         }
 
