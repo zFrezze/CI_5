@@ -1,8 +1,19 @@
 language: 'en'
+language-skins:
+  en: "https://textures.minecraft.net/texture/bee5c850afbb7d8843265a146211ac9c615f733dcc5a8e2190e5c247dea32"
+  de: "https://textures.minecraft.net/texture/5e7899b4806858697e283f084d9173fe487886453774626b24bd8cfecc77b3f"
+  at: "https://textures.minecraft.net/texture/3d5ee67127feec48346daba884adc93d6fa3a8d3d0f0e84facaabbdca97aa7ff"
+  ch: "https://textures.minecraft.net/texture/c5c27ed9b8cf6f37828150df02c48679989ae70829866ce698c25a37c666de2"
+  fr: "https://textures.minecraft.net/texture/6903349fa45bdd87126d9cd3c6c0abba7dbd6f56fb8d78701873a1e7c8ee33cf"
+  es: "https://textures.minecraft.net/texture/c2d730b6dda16b584783b63d082a80049b5fa70228aba4ae884c2c1fc0c3a8bc"
+
 token:
   skin-url: https://textures.minecraft.net/texture/31f51d801ce3e665c7d0d5c381acb1a438752cf576e5e86102a4f7ca358a6aad
 
 homes:
+  max-homes:
+    vip: 7
+    default: 4
   price-set: 25
   price-remove: 10
   price-teleport: 5

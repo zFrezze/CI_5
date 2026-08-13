@@ -8,6 +8,10 @@ general:
   not-enough-tokens: "&cPas assez de jetons ! Il te faut %price% (il t'en manque %missing%)."
   invalid-number: "&cNombre invalide : %input%"
 
+language:
+  changed: "&aTu as changé la langue en %language%."
+  invalid: "&cCette langue n'existe pas."
+
 # Token system (craft / deposit / /token)
 token:
   crafted: "&aTu as fabriqué %amount% jetons."
@@ -45,10 +49,19 @@ removehome:
 
 # Confirm GUI (item names, title, lore)
 gui:
+  title-set: "&fConfirmer la création du home &a%home%&f ?"
+  title-override: "&fConfirmer l'écrasement du home &a%home%&f ?"
+  title-remove: "&fConfirmer la suppression du home &a%home%&f ?"
+  title-teleport: "&fTe téléporter vers le home &a%home%&f ?"
+  window-title: "&8Confirmation"
+  message-set: "&7Tu dois payer %price% jetons pour créer ce home."
+  message-override: "&7Tu dois payer %price% jetons pour écraser ce home."
+  message-remove: "&7Tu récupères %price% jetons en supprimant ce home."
+  message-teleport: "&7Confirme la téléportation vers le home."
+  label-costs: "&fCoût : &a%price%"
+  label-refund: "&fRemboursement : &a%price%"
   confirm: "&aConfirmer"
   cancel: "&cAnnuler"
-  title: "&fVeux-tu vraiment %action% le home &a%home%&f ?"
-  price: "&f%price-label% : &a%price%"
   world: "&7Monde : &f%world%"
   coord-x: "&7x : &f%x%"
   coord-y: "&7y : &f%y%"

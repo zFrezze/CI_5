@@ -1,7 +1,12 @@
 package at.zFrezze.cyberInfra.gui;
 
 import at.zFrezze.cyberInfra.CyberInfra;
+import at.zFrezze.cyberInfra.config.ConfigManager;
+import at.zFrezze.cyberInfra.config.ConfigMessage;
+import at.zFrezze.cyberInfra.data.CustomPlayer;
 import at.zFrezze.cyberInfra.data.PendingHome;
+import at.zFrezze.cyberInfra.data.PlayerManager;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -24,14 +29,17 @@ import java.util.UUID;
 public class ConfirmGUI {
 
     private final CyberInfra main;
-
+    private final ConfigManager configManager;
+    private final PlayerManager playerManager;
     private final Map<UUID, PendingHome> pending = new HashMap<>();
 
-    public ConfirmGUI(CyberInfra main) {
+    public ConfirmGUI(CyberInfra main, ConfigManager configManager, PlayerManager playerManager) {
         this.main = main;
+        this.configManager = configManager;
+        this.playerManager = playerManager;
     }
 
-    public void openGUI(Player player, HomeActions homeActions, String homeName, Location location, int price, String title) {
+    public void openGUI(Player player, HomeActions homeActions, String homeName, Location location, int price) {
 
         int x = Math.toIntExact(Math.round(location.getX()));
         int y = Math.toIntExact(Math.round(location.getY()));
@@ -39,10 +47,13 @@ public class ConfirmGUI {
         String world = location.getWorld().getName();
 
 
-        String actionDisplay = homeActions.getDisplay();
+        CustomPlayer cp = playerManager.get(player.getUniqueId());
+        if (cp == null) return;
+
+        Component windowTitle = configManager.getMessage(ConfigMessage.CONFIRMGUI_WINDOW_TITLE, cp.getLanguage());
 
         ConfirmHolder holder = new ConfirmHolder();
-        Inventory inv = Bukkit.createInventory(holder, 27, title);
+        Inventory inv = Bukkit.createInventory(holder, 27, windowTitle);
         holder.setInventory(inv);
 
         for (int i : new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26}) {
@@ -52,16 +63,15 @@ public class ConfirmGUI {
 
         ItemStack confirm = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
         ItemMeta confirmMeta = confirm.getItemMeta();
-        confirmMeta.setDisplayName(ChatColor.GREEN + "Confirm");
-        String message = homeActions.getMessage().replace("%price%", String.valueOf(price));
-        confirmMeta.setLore(List.of(ChatColor.WHITE + message));
+        confirmMeta.displayName(configManager.getMessage(ConfigMessage.CONFIRMGUI_CONFIRM, cp.getLanguage()));
+        confirmMeta.lore(List.of(configManager.getMessage(homeActions.getMessage(), Map.of("price", String.valueOf(price)), cp.getLanguage())));
         confirm.setItemMeta(confirmMeta);
 
         inv.setItem(11, confirm);
 
         ItemStack cancel = new ItemStack(Material.RED_STAINED_GLASS_PANE);
         ItemMeta cancelMeta = cancel.getItemMeta();
-        cancelMeta.setDisplayName(ChatColor.RED + "Cancel");
+        cancelMeta.displayName(configManager.getMessage(ConfigMessage.CONFIRMGUI_CANCEL, cp.getLanguage()));
         cancel.setItemMeta(cancelMeta);
 
         inv.setItem(15, cancel);
@@ -70,14 +80,14 @@ public class ConfirmGUI {
 
         ItemStack home = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) home.getItemMeta();
-        meta.setDisplayName(ChatColor.WHITE + "Confirm to " + actionDisplay + " home " + ChatColor.GREEN + homeName + ChatColor.WHITE + "?");
-        meta.setLore(List.of(
-                ChatColor.WHITE + homeActions.getPriceLabel() + ": " + ChatColor.GREEN + price,
-                " ",
-                ChatColor.GRAY + "World: " + ChatColor.WHITE + world,
-                ChatColor.GRAY + "x: " + ChatColor.WHITE + x,
-                ChatColor.GRAY + "y: " + ChatColor.WHITE + y,
-                ChatColor.GRAY + "z: " + ChatColor.WHITE + z
+        meta.displayName(configManager.getMessage(homeActions.getTitle(), Map.of("home", homeName), cp.getLanguage()));
+        meta.lore(List.of(
+                configManager.getMessage(homeActions.getPriceLabel(), Map.of("price", String.valueOf(price)), cp.getLanguage()),
+                Component.empty(),
+                configManager.getMessage(ConfigMessage.CONFIRMGUI_WORLD, Map.of("world", world), cp.getLanguage()),
+                configManager.getMessage(ConfigMessage.CONFIRMGUI_COORD_X, Map.of("x", String.valueOf(x)), cp.getLanguage()),
+                configManager.getMessage(ConfigMessage.CONFIRMGUI_COORD_Y, Map.of("y", String.valueOf(y)), cp.getLanguage()),
+                configManager.getMessage(ConfigMessage.CONFIRMGUI_COORD_Z, Map.of("z", String.valueOf(z)), cp.getLanguage())
         ));
 
         PlayerProfile profile = Bukkit.createPlayerProfile(UUID.randomUUID());

@@ -1,0 +1,68 @@
+# ═══════════════════════════════════════════
+#  CyberInfra — Language file (de_AT, echtes Österreichisch)
+# ═══════════════════════════════════════════
+
+# Shared across multiple commands
+general:
+  no-permission: "&cDes derfst net, dazua hast du koa Berechtigung, Oida."
+  not-enough-tokens: "&cZu wenig Tokens, Oida! Du brauchst %price% (dir fehln no %missing%)."
+  invalid-number: "&cDes is ka gscheite Zahl: %input%"
+
+language:
+  changed: "&aPasst, hast auf %language% umgstellt."
+  invalid: "&cDe Sprach gibts net, spü net deppat."
+
+# Token system (craft / deposit / /token)
+token:
+  crafted: "&aHast da %amount% Tokens zsammbastelt."
+  deposited-one: "&aHast 1 Token eizahlt."
+  deposited-many: "&aHast %amount% Tokens eizahlt."
+  balance: "&aDu hast %amount% Tokens am Konto."
+  balance-other: "&a%player% hot %amount% Tokens."
+  usage-invalid: "&cDes passt so goar net! Nimm /token info|set|add|remove <player> [amount]"
+  usage-sub: "&cSo gehts: /token %sub% <player> <amount>"
+  action-done: "&a%action% is durch für %player% (%amount%)."
+
+# Withdraw
+withdraw:
+  usage: "&cSo gehts: /withdraw <amount>"
+  not-positive: "&cDe Zahl muass größer ois null sei."
+  no-space: "&cEntweda hast net gnua Tokens oder koan Platz mehr im Sackl!"
+  success: "&aHast %amount% Tokens obghobn. Am Konto is no: %remaining%"
+
+# Home — teleport (/home)
+home:
+  usage: "&cDes passt so net! Schreib /home <Home>"
+  not-existing: "&c%home% gibts bei dir goar net!"
+  teleported: "&aBist saubaschee zu %home% hinteleportiert worn."
+
+# Sethome
+sethome:
+  usage: "&cDes passt so net! /sethome <name>"
+  max-reached: "&cJetzt is aus, du hast scho des Maximum an Homes voll!"
+  created: "&a%home% is glegt worn, passt! (-%price% Tokens)"
+
+# Removehome
+removehome:
+  usage: "&cDes passt so net! /removehome <name>"
+  removed: "&a%home% is weg, hast wieda Göd griagt! (+%price% Tokens)"
+
+# Confirm GUI (item names, title, lore)
+gui:
+  title-set: "&fWüst des Home &a%home% &fwirklich aufstön?"
+  title-override: "&fWüst des Home &a%home% &fwirklich überschreim?"
+  title-remove: "&fWüst des Home &a%home% &fwirklich obreißn?"
+  title-teleport: "&fZum Home &a%home% &fhinhupfa?"
+  window-title: "&8Sicha, dass'd des wüst?"
+  message-set: "&7Do kost's di %price% Tokens, wennst des Home aufstön wüst."
+  message-override: "&7Do kost's di %price% Tokens, wennst des überschreim wüst."
+  message-remove: "&7Kriagst %price% Tokens retour, wennst des obreißt."
+  message-teleport: "&7Passt des mit'm Hupfa zum Home?"
+  label-costs: "&fKostt: &a%price%"
+  label-refund: "&fZruck: &a%price%"
+  confirm: "&aPasst"
+  cancel: "&cLos ma sei"
+  world: "&7Welt: &f%world%"
+  coord-x: "&7x: &f%x%"
+  coord-y: "&7y: &f%y%"
+  coord-z: "&7z: &f%z%"

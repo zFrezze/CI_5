@@ -8,6 +8,10 @@ general:
   not-enough-tokens: "&cNicht genug Tokens! Du brauchst %price% (dir fehlen noch %missing%)."
   invalid-number: "&cUngültige Zahl: %input%"
 
+language:
+  changed: "&aDu hast die Sprache zu %language% geändert."
+  invalid: "&cDiese Sprache existiert nicht."
+
 # Token system (craft / deposit / /token)
 token:
   crafted: "&aDu hast %amount% Tokens hergestellt."
@@ -45,10 +49,19 @@ removehome:
 
 # Confirm GUI (item names, title, lore)
 gui:
+  title-set: "&fHome &a%home% &fwirklich setzen?"
+  title-override: "&fHome &a%home% &fwirklich überschreiben?"
+  title-remove: "&fHome &a%home% &fwirklich entfernen?"
+  title-teleport: "&fZu Home &a%home% &fteleportieren?"
+  window-title: "&8Bestätigung"
+  message-set: "&7Du musst %price% Tokens bezahlen, um dieses Home zu setzen."
+  message-override: "&7Du musst %price% Tokens bezahlen, um dieses Home zu überschreiben."
+  message-remove: "&7Du bekommst %price% Tokens zurück, wenn du dieses Home entfernst."
+  message-teleport: "&7Bestätige die Teleportation zum Home."
+  label-costs: "&fKosten: &a%price%"
+  label-refund: "&fRückerstattung: &a%price%"
   confirm: "&aBestätigen"
   cancel: "&cAbbrechen"
-  title: "&fMöchtest du das Home &a%home% &fwirklich %action%?"
-  price: "&f%price-label%: &a%price%"
   world: "&7Welt: &f%world%"
   coord-x: "&7x: &f%x%"
   coord-y: "&7y: &f%y%"

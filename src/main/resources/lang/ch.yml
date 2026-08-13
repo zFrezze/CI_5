@@ -8,6 +8,10 @@ general:
   not-enough-tokens: "&cNed gnueg Tokens! Du bruuchsch %price% (dir fehled na %missing%)."
   invalid-number: "&cDas isch kei gültigi Zahl: %input%"
 
+language:
+  changed: "&aDu hesch d'Sprach uf %language% gwächslet."
+  invalid: "&cDi Sprach git's ned."
+
 # Token system (craft / deposit / /token)
 token:
   crafted: "&aDu hesch %amount% Tokens hergstellt."
@@ -45,10 +49,19 @@ removehome:
 
 # Confirm GUI (item names, title, lore)
 gui:
+  title-set: "&fWosch das Home &a%home% &fwürkli setze?"
+  title-override: "&fWosch das Home &a%home% &fwürkli überschriibe?"
+  title-remove: "&fWosch das Home &a%home% &fwürkli lösche?"
+  title-teleport: "&fZum Home &a%home% &fteleportiere?"
+  window-title: "&8Bestätigung"
+  message-set: "&7Du muesch %price% Tokens zahle, für das Home z'setze."
+  message-override: "&7Du muesch %price% Tokens zahle, für das z'überschriibe."
+  message-remove: "&7Du becho %price% Tokens zrugg, wenn's das lösched."
+  message-teleport: "&7Bestätig d'Teleportation zum Home."
+  label-costs: "&fChoschte: &a%price%"
+  label-refund: "&fRückzahlig: &a%price%"
   confirm: "&aPasst"
   cancel: "&cAbbräche"
-  title: "&fWosch das Home &a%home% &fwürkli %action%?"
-  price: "&f%price-label%: &a%price%"
   world: "&7Wält: &f%world%"
   coord-x: "&7x: &f%x%"
   coord-y: "&7y: &f%y%"

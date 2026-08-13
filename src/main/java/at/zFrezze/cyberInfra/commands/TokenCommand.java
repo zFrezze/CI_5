@@ -79,6 +79,11 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
 
         CustomPlayer cp = playerManager.get(player.getUniqueId());
 
+        if (!player.hasPermission("ci.token.use")) {
+            player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_NO_PERMISSION, cp.getLanguage()));
+            return true;
+        }
+
         if (args.length == 0) {
             int amount = playerManager.getToken(player.getUniqueId());
             player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_BALANCE,
@@ -105,7 +110,7 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
             }
 
             case "set", "add", "remove" -> {
-                if (!player.hasPermission("ci.admin") && !player.hasPermission("ci.tokens.admin")) {
+                if (!player.hasPermission("ci.admin") && !player.hasPermission("ci.token.admin")) {
                     player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_NO_PERMISSION, cp.getLanguage()));
                     return true;
                 }

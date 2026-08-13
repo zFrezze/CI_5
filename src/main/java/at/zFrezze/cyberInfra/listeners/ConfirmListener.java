@@ -3,14 +3,10 @@ package at.zFrezze.cyberInfra.listeners;
 import at.zFrezze.cyberInfra.config.ConfigManager;
 import at.zFrezze.cyberInfra.config.ConfigMessage;
 import at.zFrezze.cyberInfra.gui.ConfirmGUI;
-import at.zFrezze.cyberInfra.CyberInfra;
 import at.zFrezze.cyberInfra.data.CustomPlayer;
 import at.zFrezze.cyberInfra.data.PendingHome;
 import at.zFrezze.cyberInfra.data.PlayerManager;
 import at.zFrezze.cyberInfra.gui.ConfirmHolder;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,13 +15,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.Map;
 
-public class InventoryListener implements Listener {
+public class ConfirmListener implements Listener {
 
     private final ConfirmGUI confirmGUI;
     private final PlayerManager playerManager;
     private final ConfigManager configManager;
 
-    public InventoryListener(ConfirmGUI confirmGUI, PlayerManager playerManager, ConfigManager configManager) {
+    public ConfirmListener(ConfirmGUI confirmGUI, PlayerManager playerManager, ConfigManager configManager) {
         this.confirmGUI = confirmGUI;
         this.playerManager = playerManager;
         this.configManager = configManager;
@@ -43,6 +39,11 @@ public class InventoryListener implements Listener {
         Player player = (Player) e.getWhoClicked();
         CustomPlayer cp = playerManager.get(player.getUniqueId());
         if (cp == null) return;
+
+        if (!player.hasPermission("ci.confirm")) {
+            player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_NO_PERMISSION, cp.getLanguage()));
+            return;
+        }
 
         switch (e.getRawSlot()) {
             case 11:

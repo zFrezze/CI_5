@@ -37,6 +37,11 @@ public class SethomeCommand implements CommandExecutor {
         CustomPlayer cp = playerManager.get(player.getUniqueId());
         if (cp == null) return true;
 
+        if (!player.hasPermission("ci.sethome.use")) {
+            player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_NO_PERMISSION, cp.getLanguage()));
+            return true;
+        }
+
         if (args.length >= 2) {
             player.sendActionBar();
             return true;
@@ -54,8 +59,11 @@ public class SethomeCommand implements CommandExecutor {
         }
 
         boolean isOverride = cp.getHome(name) != null;
+        boolean isVip = player.hasPermission("home.vip");
 
-        if (!isOverride && cp.getHomeAmount() >= 5) {
+        int maxHomes = isVip ? main.getConfig().getInt("homes.max-homes.vip") : main.getConfig().getInt("homes.max-homes.default");
+
+        if (!isOverride && cp.getHomeAmount() >= maxHomes) {
             player.sendActionBar(configManager.getMessage(ConfigMessage.SETHOME_MAX_REACHED, cp.getLanguage()));
             return true;
         }
@@ -74,7 +82,7 @@ public class SethomeCommand implements CommandExecutor {
             return true;
         }
 
-        confirmGUI.openGUI(player, action, name, player.getLocation(), price, CyberInfra.CONFIRM_GUI_TITLE);
+        confirmGUI.openGUI(player, action, name, player.getLocation(), price);
 
         return true;
     }

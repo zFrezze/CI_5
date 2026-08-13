@@ -40,6 +40,11 @@ public class RemovehomeCommand implements CommandExecutor, TabCompleter {
         CustomPlayer cp = playerManager.get(player.getUniqueId());
         if (cp == null) return true;
 
+        if (!player.hasPermission("ci.removehome.use")) {
+            player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_NO_PERMISSION, cp.getLanguage()));
+            return true;
+        }
+
         if (args.length != 1) {
             player.sendActionBar(configManager.getMessage(ConfigMessage.REMOVEHOME_USAGE, cp.getLanguage()));
             return true;
@@ -52,7 +57,7 @@ public class RemovehomeCommand implements CommandExecutor, TabCompleter {
         }
 
         int price = main.getRemoveHomePrice();
-        confirmGUI.openGUI(player, HomeActions.REMOVE_HOME, args[0], cp.getHome(args[0]), price, CyberInfra.CONFIRM_GUI_TITLE);
+        confirmGUI.openGUI(player, HomeActions.REMOVE_HOME, args[0], cp.getHome(args[0]), price);
         return true;
     }
 

@@ -5,10 +5,8 @@ import at.zFrezze.cyberInfra.config.ConfigManager;
 import at.zFrezze.cyberInfra.data.Database;
 import at.zFrezze.cyberInfra.data.PlayerManager;
 import at.zFrezze.cyberInfra.gui.ConfirmGUI;
-import at.zFrezze.cyberInfra.listeners.DeathListener;
-import at.zFrezze.cyberInfra.listeners.InventoryListener;
-import at.zFrezze.cyberInfra.listeners.JoinListener;
-import at.zFrezze.cyberInfra.listeners.TokenListener;
+import at.zFrezze.cyberInfra.gui.LanguageGUI;
+import at.zFrezze.cyberInfra.listeners.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -25,9 +23,7 @@ public final class CyberInfra extends JavaPlugin {
     private Database database;
     private ConfirmGUI confirmGUI;
     private ConfigManager configManager;
-
-    public static final String CONFIRM_GUI_TITLE = ChatColor.DARK_GRAY + "Confirmation";
-
+    private LanguageGUI languageGUI;
 
     @Override
     public void onEnable() {
@@ -35,7 +31,7 @@ public final class CyberInfra extends JavaPlugin {
         saveDefaultConfig();
         saveResource("lang/en.yml", false);
         saveResource("lang/de.yml", false);
-        saveResource("lang/au.yml", false);
+        saveResource("lang/at.yml", false);
         saveResource("lang/fr.yml", false);
         saveResource("lang/es.yml", false);
         saveResource("lang/ch.yml", false);
@@ -67,17 +63,20 @@ public final class CyberInfra extends JavaPlugin {
         tokenCraft.registerRecipe();
 
         this.playerManager = new PlayerManager(this, tokenCraft);
-        this.confirmGUI = new ConfirmGUI(this);
+        this.confirmGUI = new ConfirmGUI(this, configManager, playerManager);
 
         for (Player p : Bukkit.getOnlinePlayers()) {
             UUID uuid = p.getUniqueId();
             Bukkit.getScheduler().runTaskAsynchronously(this, () -> playerManager.loadPlayer(uuid));
         }
 
+        this.languageGUI = new LanguageGUI(this);
+
         Bukkit.getPluginManager().registerEvents(new JoinListener(this, playerManager), this);
         Bukkit.getPluginManager().registerEvents(new TokenListener(playerManager, tokenCraft, configManager), this);
         Bukkit.getPluginManager().registerEvents(new DeathListener(), this);
-        Bukkit.getPluginManager().registerEvents(new InventoryListener(confirmGUI, playerManager, configManager), this);
+        Bukkit.getPluginManager().registerEvents(new ConfirmListener(confirmGUI, playerManager, configManager), this);
+        Bukkit.getPluginManager().registerEvents(new LanguageListener(languageGUI, playerManager, configManager), this);
 
         TokenCommand tokenCommand = new TokenCommand(playerManager, configManager);
         getCommand("token").setExecutor(tokenCommand);
@@ -97,7 +96,7 @@ public final class CyberInfra extends JavaPlugin {
         getCommand("home").setExecutor(homeCommand);
         getCommand("home").setTabCompleter(homeCommand);
 
-        LanguageCommand languageCommand = new LanguageCommand(configManager, playerManager);
+        LanguageCommand languageCommand = new LanguageCommand(configManager, playerManager, this, languageGUI);
         getCommand("language").setExecutor(languageCommand);
         getCommand("language").setTabCompleter(languageCommand);
 
@@ -127,7 +126,10 @@ public final class CyberInfra extends JavaPlugin {
     public int getTeleportHomePrice() {
         return getConfig().getInt("homes.price-teleport");
     }
-    public ConfigManager getConfigManager() {return configManager;}
+
+    public ConfigManager getConfigManager() {
+        return configManager;
+    }
 
     @Override
     public void onDisable() {
@@ -140,26 +142,52 @@ public final class CyberInfra extends JavaPlugin {
     private boolean validateConfig() {
         List<String> required = List.of(
                 "token.skin-url",
+
                 "homes.skin-url",
                 "homes.price-set",
                 "homes.price-remove",
-                "homes.price-teleport"
+                "homes.price-teleport",
+                "homes.max-homes.default",
+                "homes.max-homes.vip",
+
+                "language"
         );
 
         List<String> missing = new ArrayList<>();
+
         for (String key : required) {
             if (!getConfig().contains(key)) {
                 missing.add(key);
             }
         }
 
+        List<String> languages = List.of(
+                "en", "de", "at", "ch", "fr", "es"
+        );
+
+        for (String language : languages) {
+            String key = "language-skins." + language;
+
+            if (!getConfig().contains(key) ||
+                    getConfig().getString(key) == null ||
+                    getConfig().getString(key).isBlank()) {
+                missing.add(key);
+            }
+        }
+
         if (!missing.isEmpty()) {
-            getLogger().severe("Missing Config-Keys: " + String.join(", ", missing));
+            getLogger().severe(
+                    "Missing Config-Keys: " + String.join(", ", missing)
+            );
             return false;
         }
 
-        if (getConfig().getInt("homes.price-set") < getConfig().getInt("homes.price-remove")) {
-            getLogger().warning("price-set is smaller than price-remove → Override would be free!");
+        if (getConfig().getInt("homes.price-set")
+                < getConfig().getInt("homes.price-remove")) {
+
+            getLogger().warning(
+                    "price-set is smaller than price-remove → Override would be free!"
+            );
         }
 
         return true;

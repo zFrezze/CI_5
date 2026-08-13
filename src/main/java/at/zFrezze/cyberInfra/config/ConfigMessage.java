@@ -39,7 +39,28 @@ public enum ConfigMessage {
 
     //Removehome
     REMOVEHOME_USAGE("removehome.usage"),
-    REMOVEHOME_REMOVED("removehome.removed");
+    REMOVEHOME_REMOVED("removehome.removed"),
+
+    //ConfirmGUI
+    CONFIRMGUI_CONFIRM("gui.confirm"),
+    CONFIRMGUI_CANCEL("gui.cancel"),
+    CONFIRMGUI_WORLD("gui.world"),
+    CONFIRMGUI_COORD_X("gui.coord-x"),
+    CONFIRMGUI_COORD_Y("gui.coord-y"),
+    CONFIRMGUI_COORD_Z("gui.coord-z"),
+
+    //HomeActions
+    CONFIRMGUI_TITLE_SET("gui.title-set"),
+    CONFIRMGUI_TITLE_TELEPORT("gui.title-teleport"),
+    CONFIRMGUI_MESSAGE_SET("gui.message-set"),
+    CONFIRMGUI_LABEL_COSTS("gui.label-costs"),
+    CONFIRMGUI_LABEL_REFUND("gui.label-refund"),
+    CONFIRMGUI_TITLE_OVERRIDE("gui.title-override"),
+    CONFIRMGUI_TITLE_REMOVE("gui.title-remove"),
+    CONFIRMGUI_MESSAGE_OVERRIDE("gui.message-override"),
+    CONFIRMGUI_MESSAGE_REMOVE("gui.message-remove"),
+    CONFIRMGUI_MESSAGE_TELEPORT("gui.message-teleport"),
+    CONFIRMGUI_WINDOW_TITLE("gui.window-title");
 
 
     private final String key;

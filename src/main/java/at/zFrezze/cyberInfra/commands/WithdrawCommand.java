@@ -48,6 +48,11 @@ public class WithdrawCommand implements CommandExecutor, TabCompleter {
 
         CustomPlayer cp = playerManager.get(player.getUniqueId());
 
+        if (!player.hasPermission("ci.withdraw.use")) {
+            player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_NO_PERMISSION, cp.getLanguage()));
+            return true;
+        }
+
         if (args.length != 1) {
             player.sendActionBar(configManager.getMessage(ConfigMessage.WITHDRAW_USAGE, cp.getLanguage()));
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);

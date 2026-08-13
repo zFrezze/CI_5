@@ -49,10 +49,19 @@ removehome:
 
 # Confirm GUI (item names, title, lore)
 gui:
+  title-set: "&fConfirm to set home &a%home%&f?"
+  title-override: "&fConfirm to override home &a%home%&f?"
+  title-remove: "&fConfirm to remove home &a%home%&f?"
+  title-teleport: "&fTeleport to home &a%home%&f?"
+  window-title: "&8Confirmation"
+  message-set: "&7You need to pay %price% tokens to set this home."
+  message-override: "&7You need to pay %price% tokens to override this home."
+  message-remove: "&7You get %price% tokens back for removing this home."
+  message-teleport: "&7Confirm home teleportation."
+  label-costs: "&fCosts: &a%price%"
+  label-refund: "&fRefund: &a%price%"
   confirm: "&aConfirm"
   cancel: "&cCancel"
-  title: "&fConfirm to %action% home &a%home%&f?"
-  price: "&f%price-label%: &a%price%"
   world: "&7World: &f%world%"
   coord-x: "&7x: &f%x%"
   coord-y: "&7y: &f%y%"

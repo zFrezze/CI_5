@@ -40,17 +40,22 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
 
         if (!(sender instanceof Player player)) return true;
 
-        CustomPlayer customPlayer = playerManager.get(player.getUniqueId());
-        if (customPlayer == null) return true;
+        CustomPlayer cp = playerManager.get(player.getUniqueId());
+        if (cp == null) return true;
 
-        if (args.length != 1) {
-            player.sendActionBar(configManager.getMessage(ConfigMessage.HOME_USAGE, customPlayer.getLanguage()));
+        if (!player.hasPermission("ci.home.use")) {
+            player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_NO_PERMISSION, cp.getLanguage()));
             return true;
         }
 
-        Location home = customPlayer.getHome(args[0]);
+        if (args.length != 1) {
+            player.sendActionBar(configManager.getMessage(ConfigMessage.HOME_USAGE, cp.getLanguage()));
+            return true;
+        }
+
+        Location home = cp.getHome(args[0]);
         if (home == null) {
-            player.sendActionBar(configManager.getMessage(ConfigMessage.HOME_NOT_EXISTING, Map.of("home", args[0].toString()), customPlayer.getLanguage()));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.HOME_NOT_EXISTING, Map.of("home", args[0].toString()), cp.getLanguage()));
             return true;
         }
 
@@ -61,10 +66,10 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
             player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_NOT_ENOUGH_TOKENS,
                     Map.of(
                             "price", String.valueOf(price),
-                            "missing", String.valueOf(missing)), customPlayer.getLanguage()));
+                            "missing", String.valueOf(missing)), cp.getLanguage()));
             return true;
         }
-        confirmGUI.openGUI(player, HomeActions.TELEPORT_HOME, args[0], home, price, CyberInfra.CONFIRM_GUI_TITLE);
+        confirmGUI.openGUI(player, HomeActions.TELEPORT_HOME, args[0], home, price);
 
         return true;
     }

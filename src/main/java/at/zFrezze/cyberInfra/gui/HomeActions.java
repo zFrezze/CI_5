@@ -1,23 +1,25 @@
 package at.zFrezze.cyberInfra.gui;
 
+import at.zFrezze.cyberInfra.config.ConfigMessage;
+
 public enum HomeActions {
 
-    SET_HOME("set", "You need to pay %price% tokens to set this home.", "Costs"),
-    OVERRIDE_HOME("override", "You need to pay %price% tokens to override this home.", "Costs"),
-    REMOVE_HOME("remove", "You get %price% tokens back for removing this home.", "Refund"),
-    TELEPORT_HOME("teleport to", "Confirm home teleportation. ", "Costs");
+    SET_HOME(ConfigMessage.CONFIRMGUI_TITLE_SET, ConfigMessage.CONFIRMGUI_MESSAGE_SET, ConfigMessage.CONFIRMGUI_LABEL_COSTS),
+    OVERRIDE_HOME(ConfigMessage.CONFIRMGUI_TITLE_OVERRIDE, ConfigMessage.CONFIRMGUI_MESSAGE_OVERRIDE, ConfigMessage.CONFIRMGUI_LABEL_COSTS),
+    REMOVE_HOME(ConfigMessage.CONFIRMGUI_TITLE_REMOVE, ConfigMessage.CONFIRMGUI_MESSAGE_REMOVE, ConfigMessage.CONFIRMGUI_LABEL_REFUND),
+    TELEPORT_HOME(ConfigMessage.CONFIRMGUI_TITLE_TELEPORT, ConfigMessage.CONFIRMGUI_MESSAGE_TELEPORT, ConfigMessage.CONFIRMGUI_LABEL_COSTS);
 
-    private final String display;
-    private final String message;
-    private final String priceLabel;
+    private final ConfigMessage title;
+    private final ConfigMessage message;
+    private final ConfigMessage priceLabel;
 
-    HomeActions(String display, String message, String priceLabel) {
-        this.display = display;
+    HomeActions(ConfigMessage title, ConfigMessage message, ConfigMessage priceLabel) {
+        this.title = title;
         this.message = message;
         this.priceLabel = priceLabel;
     }
 
-    public String getDisplay() {return display;}
-    public String getMessage() {return message;}
-    public String getPriceLabel() {return priceLabel;}
+    public ConfigMessage getTitle() { return title; }
+    public ConfigMessage getMessage() { return message; }
+    public ConfigMessage getPriceLabel() { return priceLabel; }
 }
