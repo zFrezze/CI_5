@@ -4,11 +4,11 @@ import at.zFrezze.cyberInfra.commands.*;
 import at.zFrezze.cyberInfra.config.ConfigManager;
 import at.zFrezze.cyberInfra.data.Database;
 import at.zFrezze.cyberInfra.data.PlayerManager;
+import at.zFrezze.cyberInfra.data.TpaManager;
 import at.zFrezze.cyberInfra.gui.ConfirmGUI;
 import at.zFrezze.cyberInfra.gui.LanguageGUI;
 import at.zFrezze.cyberInfra.listeners.*;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,6 +24,7 @@ public final class CyberInfra extends JavaPlugin {
     private ConfirmGUI confirmGUI;
     private ConfigManager configManager;
     private LanguageGUI languageGUI;
+    private TpaManager tpaManager;
 
     @Override
     public void onEnable() {
@@ -64,6 +65,7 @@ public final class CyberInfra extends JavaPlugin {
 
         this.playerManager = new PlayerManager(this, tokenCraft);
         this.confirmGUI = new ConfirmGUI(this, configManager, playerManager);
+        this.tpaManager = new TpaManager(this, configManager, playerManager);
 
         for (Player p : Bukkit.getOnlinePlayers()) {
             UUID uuid = p.getUniqueId();
@@ -99,6 +101,14 @@ public final class CyberInfra extends JavaPlugin {
         LanguageCommand languageCommand = new LanguageCommand(configManager, playerManager, this, languageGUI);
         getCommand("language").setExecutor(languageCommand);
         getCommand("language").setTabCompleter(languageCommand);
+
+        TpaCommand tpaCommand = new TpaCommand(configManager, playerManager, tpaManager);
+        getCommand("tpa").setExecutor(tpaCommand);
+        getCommand("tpa").setTabCompleter(tpaCommand);
+
+        TpacceptCommand tpacceptCommand = new TpacceptCommand(configManager, playerManager, tpaManager, this);
+        getCommand("tpaccept").setExecutor(tpacceptCommand);
+
 
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> playerManager.saveAll(), 2400L, 2400L);
     }
@@ -191,5 +201,9 @@ public final class CyberInfra extends JavaPlugin {
         }
 
         return true;
+    }
+
+    public String getPrefix() {
+        return this.getConfig().getString("prefix");
     }
 }

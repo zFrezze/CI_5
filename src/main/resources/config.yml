@@ -1,3 +1,5 @@
+prefix: "&7&l[&x&E&8&B&9&2&3&lC&x&E&6&B&0&2&3&ly&x&E&5&A&6&2&2&lb&x&E&3&9&D&2&2&le&x&E&2&9&3&2&2&lr&x&E&0&8&A&2&1&lI&x&D&F&8&0&2&1&ln&x&D&D&7&7&2&1&lf&x&D&C&6&D&2&0&lr&x&D&A&6&4&2&0&la&7&l]"
+
 language: 'en'
 language-skins:
   en: "https://textures.minecraft.net/texture/bee5c850afbb7d8843265a146211ac9c615f733dcc5a8e2190e5c247dea32"
@@ -18,3 +20,6 @@ homes:
   price-remove: 10
   price-teleport: 5
   skin-url: https://textures.minecraft.net/texture/514668a7cfd7860c0489f30c74054baa677387d0ed518276253912c7c7e02c9e
+
+tpa:
+  price: 10

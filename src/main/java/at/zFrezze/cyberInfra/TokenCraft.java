@@ -30,7 +30,6 @@ public class TokenCraft {
     }
 
     public ItemStack buildTokenHead() {
-
         if (tokenKey == null) tokenKey = new NamespacedKey(main, "token");
 
         String url = main.getConfig().getString("token.skin-url");

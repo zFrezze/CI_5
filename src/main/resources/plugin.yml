@@ -17,6 +17,7 @@ commands:
   language:
     description: Change your language
     usage: /language [lang]
+  tpa:
 permissions:
   ci.admin:
     description: Full admin access

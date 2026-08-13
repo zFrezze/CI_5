@@ -7,6 +7,7 @@ general:
   no-permission: "&cYou don't have permission to do that."
   not-enough-tokens: "&cNot enough tokens! You need %price% (you're missing %missing%)."
   invalid-number: "&cInvalid number: %input%"
+  player-not-online: "&c%player% is not online or doesn't exist."
 
 language:
   changed: "&aYou have changed the language to %language%."
@@ -22,7 +23,7 @@ token:
   usage-invalid: "&cInvalid usage! Use /token info|set|add|remove <player> [amount]"
   usage-sub: "&cUsage: /token %sub% <player> <amount>"
   action-done: "&a%action% done for %player% (%amount%)."
-  
+
 # Withdraw
 withdraw:
   usage: "&cUsage: /withdraw <amount>"
@@ -46,6 +47,38 @@ sethome:
 removehome:
   usage: "&cInvalid usage! /removehome <name>"
   removed: "&a%home% successfully removed! (+%price% tokens)"
+
+# Tpa
+tpa:
+  usage: "&cInvalid usage! /tpa <player>"
+  sender-equal-target: "&cYou can't send yourself a TPA request."
+  sender-offline: "&cThe player who sent the request is no longer online."
+  expire-sender: "&cYour TPA request to %target% has expired."
+  expire-target: "&cThe TPA request from %player% has expired."
+  success-sender: "&a%target% accepted your TPA request."
+  success-target: "&aYou accepted %player%'s TPA request."
+  request:
+    message: "%prefix% &7%player% has sent you a TPA request."
+    accept: "&a&lACCEPT&r &8- &7/&atpaccept"
+    deny: "&c&lDENY&r &8- &7/&ctpdeny"
+    accept-hover: "&7Click here to accept."
+    deny-hover: "&7Click here to deny."
+  request-sent:
+    message: "%prefix% &7Your TPA request to %target% has been sent."
+    cancel: "&c&lCANCEL&r &8- &7/&ctpcancel"
+    cancel-hover: "&7Click here to cancel."
+
+# Tpaccept
+tpaccept:
+  usage: "&cInvalid usage! /tpaccept"
+  no-request: "&cYou have no pending TPA request."
+  sender-not-enough-tokens: "&c%player% doesn't have enough tokens for the teleport."
+
+# Tpdeny
+tpdeny:
+  no-request: "&cYou have no pending TPA request."
+  denied-target: "&aYou denied the TPA request."
+  denied-sender: "&c%target% denied your TPA request."
 
 # Confirm GUI (item names, title, lore)
 gui:
