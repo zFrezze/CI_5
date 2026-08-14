@@ -53,32 +53,41 @@ tpa:
   usage: "&cInvalid usage! /tpa <player>"
   sender-equal-target: "&cYou can't send yourself a TPA request."
   sender-offline: "&cThe player who sent the request is no longer online."
+  already-pending: "&cYou already have a pending request to %target%."
   expire-sender: "&cYour TPA request to %target% has expired."
   expire-target: "&cThe TPA request from %player% has expired."
   success-sender: "&a%target% accepted your TPA request."
   success-target: "&aYou accepted %player%'s TPA request."
   request:
     message: "%prefix% &7%player% has sent you a TPA request."
-    accept: "&a&lACCEPT&r &8- &7/&atpaccept"
-    deny: "&c&lDENY&r &8- &7/&ctpdeny"
+    accept: "&a&lACCEPT&r &8- &7/&atpaccept %player%"
+    deny: "&c&lDENY&r &8- &7/&ctpdeny %player%"
     accept-hover: "&7Click here to accept."
     deny-hover: "&7Click here to deny."
   request-sent:
     message: "%prefix% &7Your TPA request to %target% has been sent."
-    cancel: "&c&lCANCEL&r &8- &7/&ctpcancel"
+    cancel: "&c&lCANCEL&r &8- &7/&ctpcancel %target%"
     cancel-hover: "&7Click here to cancel."
 
 # Tpaccept
 tpaccept:
-  usage: "&cInvalid usage! /tpaccept"
-  no-request: "&cYou have no pending TPA request."
+  usage: "&cInvalid usage! /tpaccept <player>"
+  no-request: "&cYou have no pending TPA request from that player."
   sender-not-enough-tokens: "&c%player% doesn't have enough tokens for the teleport."
 
 # Tpdeny
 tpdeny:
-  no-request: "&cYou have no pending TPA request."
+  usage: "&cInvalid usage! /tpdeny <player>"
+  no-request: "&cYou have no pending TPA request from that player."
   denied-target: "&aYou denied the TPA request."
   denied-sender: "&c%target% denied your TPA request."
+
+# Tpcancel
+tpcancel:
+  usage: "&cInvalid usage! /tpcancel <player>"
+  no-request: "&cYou have no pending TPA request to that player."
+  cancelled-sender: "&aYou cancelled your TPA request to %target%."
+  cancelled-target: "&c%player% cancelled their TPA request."
 
 # Confirm GUI (item names, title, lore)
 gui:

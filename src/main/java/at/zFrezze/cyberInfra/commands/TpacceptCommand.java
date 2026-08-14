@@ -14,9 +14,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -47,20 +49,20 @@ public class TpacceptCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        if (!tpaManager.hasOpenTpa(player)) {
-            player.sendActionBar(configManager.getMessage(ConfigMessage.TPACCEPT_NO_PENDING_REQUEST, cp.getLanguage()));
+        if (args.length < 1) {
+            player.sendActionBar(configManager.getMessage(ConfigMessage.TPACCEPT_USAGE, cp.getLanguage()));
             return true;
         }
 
-        TpaRequest request = tpaManager.removeRequest(player.getUniqueId());
+        Player tpaSender = Bukkit.getPlayer(args[0]);
+        if (tpaSender == null) {
+            player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_PLAYER_NOT_EXISTING, cp.getLanguage()));
+            return true;
+        }
+
+        TpaRequest request = tpaManager.removeRequest(player.getUniqueId(), tpaSender.getUniqueId());
         if (request == null) {
             player.sendActionBar(configManager.getMessage(ConfigMessage.TPACCEPT_NO_PENDING_REQUEST, cp.getLanguage()));
-            return true;
-        }
-
-        Player tpaSender = Bukkit.getPlayer(request.getSender());
-        if (tpaSender == null) {
-            player.sendActionBar(configManager.getMessage(ConfigMessage.TPA_SENDER_OFFLINE, cp.getLanguage()));
             return true;
         }
 
@@ -89,7 +91,13 @@ public class TpacceptCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] args) {
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] args) {
+        if (!(sender instanceof Player player)) return List.of();
+
+        if (args.length == 1) {
+            return StringUtil.copyPartialMatches(args[0], tpaManager.getSenderNames(player.getUniqueId()), new ArrayList<>());
+        }
+
         return List.of();
     }
 }

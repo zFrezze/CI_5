@@ -53,6 +53,7 @@ public enum ConfigMessage {
     TPA_USAGE("tpa.usage"),
     TPA_SENDER_EQUAL_TARGET("tpa.sender-equal-target"),
     TPA_SENDER_OFFLINE("tpa.sender-offline"),
+    TPA_ALREADY_PENDING("tpa.already-pending"),
     TPA_EXPIRE_SENDER("tpa.expire-sender"),
     TPA_EXPIRE_TARGET("tpa.expire-target"),
     TPA_SUCCESS_SENDER("tpa.success-sender"),
@@ -72,9 +73,16 @@ public enum ConfigMessage {
     TPACCEPT_SENDER_NOT_ENOUGH_TOKENS("tpaccept.sender-not-enough-tokens"),
 
     //Tpdeny
+    TPDENY_USAGE("tpdeny.usage"),
     TPDENY_NO_PENDING_REQUEST("tpdeny.no-request"),
     TPDENY_DENIED_TARGET("tpdeny.denied-target"),
     TPDENY_DENIED_SENDER("tpdeny.denied-sender"),
+
+    //Tpcancel
+    TPCANCEL_USAGE("tpcancel.usage"),
+    TPCANCEL_NO_PENDING_REQUEST("tpcancel.no-request"),
+    TPCANCEL_CANCELLED_SENDER("tpcancel.cancelled-sender"),
+    TPCANCEL_CANCELLED_TARGET("tpcancel.cancelled-target"),
 
     //HomeActions
     CONFIRMGUI_TITLE_SET("gui.title-set"),

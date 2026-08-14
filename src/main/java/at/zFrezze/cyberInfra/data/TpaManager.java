@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class TpaManager {
     private final CyberInfra main;
     private final ConfigManager configManager;
     private final PlayerManager playerManager;
-    private final Map<UUID, TpaRequest> requests = new HashMap<>();
+    private final Map<UUID, List<TpaRequest>> requests = new HashMap<>();
 
     public TpaManager(CyberInfra main, ConfigManager configManager, PlayerManager playerManager) {
         this.main = main;
@@ -39,76 +40,93 @@ public class TpaManager {
             return;
         }
 
-        Component targetMessage = Component.text()
-                .append(
-                        configManager.getMessage(
-                                ConfigMessage.TPA_REQUEST_MESSAGE,
-                                Map.of("player", player.getName(), "prefix", main.getPrefix()),
-                                cpTarget.getLanguage()
-                        )
-                ).build();
+        List<TpaRequest> existing = requests.get(target.getUniqueId());
+        if (existing != null) {
+            for (TpaRequest r : existing) {
+                if (r.getSender().equals(player.getUniqueId())) {
+                    player.sendActionBar(configManager.getMessage(ConfigMessage.TPA_ALREADY_PENDING,
+                            Map.of("target", target.getName()), cpPlayer.getLanguage()));
+                    return;
+                }
+            }
+        }
 
-        Component targetMessageAccept = Component.text()
-                .append(
-                        configManager.getMessage(
-                                ConfigMessage.TPA_REQUEST_ACCEPT, Map.of("player", player.getName()),
-                                cpTarget.getLanguage()
-                        ).clickEvent(
-                                ClickEvent.runCommand("/tpaccept " + player.getName())
-                        ).hoverEvent(
-                                HoverEvent.showText(configManager.getMessage(ConfigMessage.TPA_REQUEST_ACCEPT_HOVER, cpTarget.getLanguage()))
-                        )
-                ).build();
-        Component targetMessageDeny = Component.text()
-                .append(
-                        configManager.getMessage(
-                                ConfigMessage.TPA_REQUEST_DENY, Map.of("player", player.getName()),
-                                cpTarget.getLanguage()
-                        ).clickEvent(
-                                ClickEvent.runCommand("/tpdeny " + player.getName())
-                        ).hoverEvent(
-                                HoverEvent.showText(configManager.getMessage(ConfigMessage.TPA_REQUEST_DENY_HOVER, cpTarget.getLanguage()))
-                        )
-                ).build();
+        BukkitTask task = Bukkit.getScheduler().runTaskLater(main, () -> {
+            TpaRequest removed = removeRequest(target.getUniqueId(), player.getUniqueId());
+            if (removed != null) {
+                if (player.isOnline()) {
+                    player.sendActionBar(configManager.getMessage(ConfigMessage.TPA_EXPIRE_SENDER,
+                            Map.of("target", target.getName()), cpPlayer.getLanguage()));
+                }
+                if (target.isOnline()) {
+                    target.sendActionBar(configManager.getMessage(ConfigMessage.TPA_EXPIRE_TARGET,
+                            Map.of("player", player.getName()), cpTarget.getLanguage()));
+                }
+            }
+        }, 20L * 60);
 
-        Component senderMessage = Component.text().append(
-                configManager.getMessage(ConfigMessage.TPA_REQUEST_SENT_MESSAGE, Map.of("target", target.getName(), "prefix", main.getPrefix()), cpPlayer.getLanguage())).build();
-        Component senderMessageDeny = Component.text()
-                .append(
-                        configManager.getMessage(ConfigMessage.TPA_REQUEST_SENT_CANCEL, Map.of("player", target.getName()), cpPlayer.getLanguage())
-                ).clickEvent(
-                        ClickEvent.runCommand("/tpcancel " + target.getName())
-                ).hoverEvent(
-                        HoverEvent.showText(configManager.getMessage(ConfigMessage.TPA_REQUEST_SENT_CANCEL_HOVER, cpPlayer.getLanguage()))
-                ).build();
+        requests.computeIfAbsent(target.getUniqueId(), k -> new ArrayList<>())
+                .add(new TpaRequest(player.getUniqueId(), task));
+
+        Component senderMessage = configManager.getMessage(ConfigMessage.TPA_REQUEST_SENT_MESSAGE,
+                Map.of("target", target.getName(), "prefix", main.getPrefix()), cpPlayer.getLanguage());
+        Component senderMessageCancel = configManager.getMessage(ConfigMessage.TPA_REQUEST_SENT_CANCEL,
+                        Map.of("target", target.getName()), cpPlayer.getLanguage())
+                .clickEvent(ClickEvent.runCommand("/tpcancel " + target.getName()))
+                .hoverEvent(HoverEvent.showText(configManager.getMessage(ConfigMessage.TPA_REQUEST_SENT_CANCEL_HOVER, cpPlayer.getLanguage())));
 
         player.sendMessage(senderMessage);
-        player.sendMessage(senderMessageDeny);
+        player.sendMessage(senderMessageCancel);
+
+        Component targetMessage = configManager.getMessage(ConfigMessage.TPA_REQUEST_MESSAGE,
+                Map.of("player", player.getName(), "prefix", main.getPrefix()), cpTarget.getLanguage());
+        Component targetMessageAccept = configManager.getMessage(ConfigMessage.TPA_REQUEST_ACCEPT,
+                        Map.of("player", player.getName()), cpTarget.getLanguage())
+                .clickEvent(ClickEvent.runCommand("/tpaccept " + player.getName()))
+                .hoverEvent(HoverEvent.showText(configManager.getMessage(ConfigMessage.TPA_REQUEST_ACCEPT_HOVER, cpTarget.getLanguage())));
+        Component targetMessageDeny = configManager.getMessage(ConfigMessage.TPA_REQUEST_DENY,
+                        Map.of("player", player.getName()), cpTarget.getLanguage())
+                .clickEvent(ClickEvent.runCommand("/tpdeny " + player.getName()))
+                .hoverEvent(HoverEvent.showText(configManager.getMessage(ConfigMessage.TPA_REQUEST_DENY_HOVER, cpTarget.getLanguage())));
 
         target.sendMessage(targetMessage);
         target.sendMessage(targetMessageAccept);
         target.sendMessage(targetMessageDeny);
-
-        BukkitTask task = Bukkit.getScheduler().runTaskLater(main, () -> {
-            if (requests.remove(target.getUniqueId()) != null) {
-                player.sendActionBar(configManager.getMessage(ConfigMessage.TPA_EXPIRE_SENDER, Map.of("target", target.getName()), cpPlayer.getLanguage()));
-                target.sendActionBar(configManager.getMessage(ConfigMessage.TPA_EXPIRE_TARGET, Map.of("player", player.getName()), cpTarget.getLanguage()));
-            }
-        }, 20L * 60);
-
-        requests.put(target.getUniqueId(), new TpaRequest(player.getUniqueId(), task));
     }
 
     public boolean hasOpenTpa(Player target) {
-        return requests.containsKey(target.getUniqueId());
+        List<TpaRequest> list = requests.get(target.getUniqueId());
+        return list != null && !list.isEmpty();
     }
 
-    public TpaRequest removeRequest(UUID target) {
-        TpaRequest request = requests.remove(target);
-        if (request != null) {
-            request.getTimeoutTask().cancel();
+    public TpaRequest removeRequest(UUID target, UUID senderUuid) {
+        List<TpaRequest> list = requests.get(target);
+        if (list == null) return null;
+
+        for (TpaRequest request : list) {
+            if (request.getSender().equals(senderUuid)) {
+                list.remove(request);
+                request.getTimeoutTask().cancel();
+                if (list.isEmpty()) {
+                    requests.remove(target);
+                }
+                return request;
+            }
         }
-        return request;
+        return null;
     }
 
+    public List<String> getSenderNames(UUID target) {
+        List<TpaRequest> list = requests.get(target);
+        if (list == null) return new ArrayList<>();
+
+        List<String> names = new ArrayList<>();
+        for (TpaRequest request : list) {
+            Player sender = Bukkit.getPlayer(request.getSender());
+            if (sender != null) {
+                names.add(sender.getName());
+            }
+        }
+        return names;
+    }
 }
