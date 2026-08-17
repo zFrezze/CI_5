@@ -25,7 +25,7 @@ public class TpaManager {
         this.playerManager = playerManager;
     }
 
-    public void sendTpa(Player player, Player target) {
+    public void sendTpa(Player player, Player target, TpaType type) {
 
         CustomPlayer cpPlayer = playerManager.get(player.getUniqueId());
         CustomPlayer cpTarget = playerManager.get(target.getUniqueId());
@@ -62,7 +62,7 @@ public class TpaManager {
         }, 20L * 60);
 
         requests.computeIfAbsent(target.getUniqueId(), k -> new ArrayList<>())
-                .add(new TpaRequest(player.getUniqueId(), task));
+                .add(new TpaRequest(player.getUniqueId(), task, type));
 
         Component senderMessage = configManager.getMessage(ConfigMessage.TPA_REQUEST_SENT_MESSAGE,
                 Map.of("target", target.getName(), "prefix", main.getPrefix()), cpPlayer.getLanguage());
