@@ -58,6 +58,8 @@ tpa:
   expire-target: "&cThe TPA request from %player% has expired."
   success-sender: "&a%target% accepted your TPA request."
   success-target: "&aYou accepted %player%'s TPA request."
+  solid-block: "&cYou need to stand on a solid block in order to tp a player to you."
+  solid-block-player: "&c%player% needs to stand on a solid block."
   request:
     message: "%prefix% &7%player% has sent you a TPA request."
     accept: "&a&lACCEPT&r &8- &7/&atpaccept %player%"
@@ -68,6 +70,10 @@ tpa:
     message: "%prefix% &7Your TPA request to %target% has been sent."
     cancel: "&c&lCANCEL&r &8- &7/&ctpcancel %target%"
     cancel-hover: "&7Click here to cancel."
+
+#Tpahere
+tpahere:
+  usage: "&cInvalid usage! /tpahere <player>"
 
 # Tpaccept
 tpaccept:

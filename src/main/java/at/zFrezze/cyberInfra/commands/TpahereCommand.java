@@ -21,13 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class TpaCommand implements CommandExecutor, TabCompleter {
+public class TpahereCommand implements CommandExecutor, TabCompleter {
 
     private final ConfigManager configManager;
     private final PlayerManager playerManager;
     private final TpaManager tpaManager;
 
-    public TpaCommand(ConfigManager configManager, PlayerManager playerManager, TpaManager tpaManager) {
+    public TpahereCommand(ConfigManager configManager, PlayerManager playerManager, TpaManager tpaManager) {
         this.configManager = configManager;
         this.playerManager = playerManager;
         this.tpaManager = tpaManager;
@@ -40,13 +40,13 @@ public class TpaCommand implements CommandExecutor, TabCompleter {
         CustomPlayer cp = playerManager.get(player.getUniqueId());
         if (cp == null) return true;
 
-        if (!player.hasPermission("ci.tpa.use")) {
+        if (!player.hasPermission("ci.tpahere.use")) {
             player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_NO_PERMISSION, cp.getLanguage()));
             return true;
         }
 
         if (!(args.length >= 1)) {
-            player.sendActionBar(configManager.getMessage(ConfigMessage.TPA_USAGE, cp.getLanguage()));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.TPAHERE_USAGE, cp.getLanguage()));
             return true;
         }
 

@@ -66,6 +66,11 @@ public enum ConfigMessage {
     TPA_REQUEST_SENT_MESSAGE("tpa.request-sent.message"),
     TPA_REQUEST_SENT_CANCEL("tpa.request-sent.cancel"),
     TPA_REQUEST_SENT_CANCEL_HOVER("tpa.request-sent.cancel-hover"),
+    TPA_SOLID_BlOCK("tpa.solid-block"),
+    TPA_SOLID_BLOCK_PLAYER("tpa.solid-block-player"),
+
+    //Tpahere
+    TPAHERE_USAGE("tpahere.usage"),
 
     //Tpaccept
     TPACCEPT_USAGE("tpaccept.usage"),

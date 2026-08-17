@@ -19,6 +19,8 @@ commands:
     usage: /language [lang]
   tpa:
   tpaccept:
+  tpdeny:
+  tpcancel:
 permissions:
   ci.admin:
     description: Full admin access

@@ -9,6 +9,7 @@ import at.zFrezze.cyberInfra.data.TpaManager;
 import at.zFrezze.cyberInfra.data.TpaRequest;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -56,7 +57,7 @@ public class TpacceptCommand implements CommandExecutor, TabCompleter {
 
         Player tpaSender = Bukkit.getPlayer(args[0]);
         if (tpaSender == null) {
-            player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_PLAYER_NOT_EXISTING, cp.getLanguage()));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_PLAYER_NOT_EXISTING, Map.of("player", args[0]), cp.getLanguage()));
             return true;
         }
 
@@ -73,6 +74,13 @@ public class TpacceptCommand implements CommandExecutor, TabCompleter {
         if (cpSender.getToken() < price) {
             player.sendActionBar(configManager.getMessage(ConfigMessage.TPACCEPT_SENDER_NOT_ENOUGH_TOKENS,
                     Map.of("player", tpaSender.getName()), cp.getLanguage()));
+            return true;
+        }
+
+        Block blockBelow = player.getLocation().clone().subtract(0, 1, 0).getBlock();
+        if (!blockBelow.isSolid()) {
+            player.sendActionBar(configManager.getMessage(ConfigMessage.TPA_SOLID_BlOCK, cp.getLanguage()));
+            tpaSender.sendActionBar(configManager.getMessage(ConfigMessage.TPA_SOLID_BLOCK_PLAYER, Map.of("player", player.getName()), cpSender.getLanguage()));
             return true;
         }
 
