@@ -61,26 +61,26 @@ public class TpacceptCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        CustomPlayer cpSender = playerManager.get(tpaSender.getUniqueId());
+        if (cpSender == null) return true;
+
+        Block blockBelow = player.getLocation().clone().subtract(0, 1, 0).getBlock();
+        if (!blockBelow.isSolid()) {
+            player.sendActionBar(configManager.getMessage(ConfigMessage.TPA_SOLID_BlOCK, cp.getLanguage()));
+            tpaSender.sendActionBar(configManager.getMessage(ConfigMessage.TPA_SOLID_BLOCK_PLAYER, Map.of("player", player.getName()), cpSender.getLanguage()));
+            return true;
+        }
+
         TpaRequest request = tpaManager.removeRequest(player.getUniqueId(), tpaSender.getUniqueId());
         if (request == null) {
             player.sendActionBar(configManager.getMessage(ConfigMessage.TPACCEPT_NO_PENDING_REQUEST, cp.getLanguage()));
             return true;
         }
 
-        CustomPlayer cpSender = playerManager.get(tpaSender.getUniqueId());
-        if (cpSender == null) return true;
-
         int price = main.getConfig().getInt("tpa.price");
         if (cpSender.getToken() < price) {
             player.sendActionBar(configManager.getMessage(ConfigMessage.TPACCEPT_SENDER_NOT_ENOUGH_TOKENS,
                     Map.of("player", tpaSender.getName()), cp.getLanguage()));
-            return true;
-        }
-
-        Block blockBelow = player.getLocation().clone().subtract(0, 1, 0).getBlock();
-        if (!blockBelow.isSolid()) {
-            player.sendActionBar(configManager.getMessage(ConfigMessage.TPA_SOLID_BlOCK, cp.getLanguage()));
-            tpaSender.sendActionBar(configManager.getMessage(ConfigMessage.TPA_SOLID_BLOCK_PLAYER, Map.of("player", player.getName()), cpSender.getLanguage()));
             return true;
         }
 

@@ -76,9 +76,6 @@ public class TpcancelCommand implements CommandExecutor, TabCompleter {
                 Map.of("player", target.getName()), cp.getLanguage()));
         target.sendActionBar(configManager.getMessage(ConfigMessage.TPCANCEL_CANCELLED_SENDER,
                 Map.of("target", player.getName()), cpSender.getLanguage()));
-
-        tpaManager.removeRequest(target.getUniqueId(), player.getUniqueId());
-
         return true;
     }
 
@@ -87,7 +84,7 @@ public class TpcancelCommand implements CommandExecutor, TabCompleter {
         if (!(sender instanceof Player player)) return List.of();
 
         if (args.length == 1) {
-            return StringUtil.copyPartialMatches(args[0], tpaManager.getSenderNames(player.getUniqueId()), new ArrayList<>());
+            return StringUtil.copyPartialMatches(args[0], tpaManager.getSentToNames(player.getUniqueId()), new ArrayList<>());
         }
 
         return List.of();

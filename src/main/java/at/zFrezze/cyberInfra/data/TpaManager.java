@@ -7,15 +7,10 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class TpaManager {
 
@@ -126,6 +121,22 @@ public class TpaManager {
             Player sender = Bukkit.getPlayer(request.getSender());
             if (sender != null) {
                 names.add(sender.getName());
+            }
+        }
+        return names;
+    }
+
+    public List<String> getSentToNames(UUID senderUuid) {
+        List<String> names = new ArrayList<>();
+
+        for (Map.Entry<UUID, List<TpaRequest>> entry : requests.entrySet()) {
+            for (TpaRequest request : entry.getValue()) {
+                if (request.getSender().equals(senderUuid)) {
+                    Player target = Bukkit.getPlayer(entry.getKey());
+                    if (target != null) {
+                        names.add(target.getName());
+                    }
+                }
             }
         }
         return names;

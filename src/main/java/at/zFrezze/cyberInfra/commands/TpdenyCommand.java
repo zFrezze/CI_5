@@ -76,9 +76,6 @@ public class TpdenyCommand implements CommandExecutor, TabCompleter {
                 Map.of("player", tpaSender.getName()), cp.getLanguage()));
         tpaSender.sendActionBar(configManager.getMessage(ConfigMessage.TPDENY_DENIED_SENDER,
                 Map.of("target", player.getName()), cpSender.getLanguage()));
-
-        tpaManager.removeRequest(player.getUniqueId(), tpaSender.getUniqueId());
-
         return true;
     }
 
