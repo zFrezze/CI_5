@@ -19,7 +19,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class TpacceptCommand implements CommandExecutor, TabCompleter {
 
@@ -70,7 +69,7 @@ public class TpacceptCommand implements CommandExecutor, TabCompleter {
 
         Block blockBelow = landingSpot.getLocation().clone().subtract(0, 1, 0).getBlock();
         if (!blockBelow.isSolid()) {
-            player.sendActionBar(configManager.getMessage(ConfigMessage.TPA_SOLID_BlOCK, cp.getLanguage()));
+            player.sendActionBar(configManager.getMessage(ConfigMessage.TPA_SOLID_BLOCK, cp.getLanguage()));
             tpaSender.sendActionBar(configManager.getMessage(ConfigMessage.TPA_SOLID_BLOCK_PLAYER, Map.of("player", player.getName()), cp.getLanguage()));
             return true;
         }

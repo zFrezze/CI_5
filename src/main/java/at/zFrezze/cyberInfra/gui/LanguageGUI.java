@@ -1,6 +1,8 @@
 package at.zFrezze.cyberInfra.gui;
 
 import at.zFrezze.cyberInfra.CyberInfra;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -60,7 +62,7 @@ public class LanguageGUI {
         meta.setOwnerProfile(profile);
         meta.getPersistentDataContainer().set(languageKey, PersistentDataType.STRING, lang);
 
-        meta.setDisplayName(lang);
+        meta.displayName(Component.text(lang).decoration(TextDecoration.ITALIC, false));
 
         head.setItemMeta(meta);
         return head;

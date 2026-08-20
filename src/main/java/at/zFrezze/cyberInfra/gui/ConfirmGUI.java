@@ -8,7 +8,6 @@ import at.zFrezze.cyberInfra.data.PendingHome;
 import at.zFrezze.cyberInfra.data.PlayerManager;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
