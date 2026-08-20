@@ -34,7 +34,7 @@ public class LanguageGUI {
         Inventory inv = Bukkit.createInventory(holder, 9, "Language");
         holder.setInventory(inv);
 
-        List<String> langs = List.of("en", "de", "at", "ch", "fr", "es");
+        List<String> langs = List.of("en", "de", "at", "ch", "fr", "es", "pirate", "cat");
         int slot = 0;
         for (String lang : langs) {
             inv.setItem(slot, createHead(lang));
