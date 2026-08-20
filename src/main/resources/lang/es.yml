@@ -7,6 +7,7 @@ general:
   no-permission: "&cNo tienes permiso para hacer eso."
   not-enough-tokens: "&c¡No tienes suficientes tokens! Necesitas %price% (te faltan %missing%)."
   invalid-number: "&cNúmero no válido: %input%"
+  player-not-online: "&c%player% no está en línea o no existe."
 
 language:
   changed: "&aHas cambiado el idioma a %language%."
@@ -46,6 +47,53 @@ sethome:
 removehome:
   usage: "&c¡Uso no válido! /removehome <name>"
   removed: "&a¡%home% eliminado con éxito! (+%price% tokens)"
+
+# Tpa
+tpa:
+  usage: "&c¡Uso no válido! /tpa <player>"
+  sender-equal-target: "&cNo puedes enviarte una solicitud de teletransporte a ti mismo."
+  sender-offline: "&cEl jugador que envió la solicitud ya no está en línea."
+  already-pending: "&cYa tienes una solicitud pendiente hacia %target%."
+  expire-sender: "&cTu solicitud de teletransporte a %target% ha expirado."
+  expire-target: "&cLa solicitud de teletransporte de %player% ha expirado."
+  success-sender: "&a%target% aceptó tu solicitud de teletransporte."
+  success-target: "&aHas aceptado la solicitud de teletransporte de %player%."
+  solid-block: "&cDebes estar sobre un bloque sólido para teletransportar a un jugador hacia ti."
+  solid-block-player: "&c%player% debe estar sobre un bloque sólido."
+  request:
+    message: "%prefix% &7%player% te ha enviado una solicitud de teletransporte."
+    accept: "&a&lACEPTAR&r &8- &7/&atpaccept %player%"
+    deny: "&c&lRECHAZAR&r &8- &7/&ctpdeny %player%"
+    accept-hover: "&7Haz clic aquí para aceptar."
+    deny-hover: "&7Haz clic aquí para rechazar."
+  request-sent:
+    message: "%prefix% &7Tu solicitud de teletransporte a %target% ha sido enviada."
+    cancel: "&c&lCANCELAR&r &8- &7/&ctpcancel %target%"
+    cancel-hover: "&7Haz clic aquí para cancelar."
+
+#Tpahere
+tpahere:
+  usage: "&c¡Uso no válido! /tpahere <player>"
+
+# Tpaccept
+tpaccept:
+  usage: "&c¡Uso no válido! /tpaccept <player>"
+  no-request: "&cNo tienes ninguna solicitud de teletransporte pendiente de ese jugador."
+  sender-not-enough-tokens: "&c%player% no tiene suficientes tokens para el teletransporte."
+
+# Tpdeny
+tpdeny:
+  usage: "&c¡Uso no válido! /tpdeny <player>"
+  no-request: "&cNo tienes ninguna solicitud de teletransporte pendiente de ese jugador."
+  denied-target: "&aHas rechazado la solicitud de teletransporte."
+  denied-sender: "&c%target% rechazó tu solicitud de teletransporte."
+
+# Tpcancel
+tpcancel:
+  usage: "&c¡Uso no válido! /tpcancel <player>"
+  no-request: "&cNo tienes ninguna solicitud de teletransporte pendiente hacia ese jugador."
+  cancelled-sender: "&aHas cancelado tu solicitud de teletransporte a %target%."
+  cancelled-target: "&c%player% canceló su solicitud de teletransporte."
 
 # Confirm GUI (item names, title, lore)
 gui:

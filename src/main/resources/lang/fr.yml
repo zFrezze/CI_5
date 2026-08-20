@@ -7,6 +7,7 @@ general:
   no-permission: "&cTu n'as pas la permission de faire ça."
   not-enough-tokens: "&cPas assez de jetons ! Il te faut %price% (il t'en manque %missing%)."
   invalid-number: "&cNombre invalide : %input%"
+  player-not-online: "&c%player% n'est pas en ligne ou n'existe pas."
 
 language:
   changed: "&aTu as changé la langue en %language%."
@@ -46,6 +47,53 @@ sethome:
 removehome:
   usage: "&cUtilisation invalide ! /removehome <name>"
   removed: "&a%home% supprimé avec succès ! (+%price% jetons)"
+
+# Tpa
+tpa:
+  usage: "&cUtilisation invalide ! /tpa <player>"
+  sender-equal-target: "&cTu ne peux pas t'envoyer une demande de téléportation à toi-même."
+  sender-offline: "&cLe joueur qui a envoyé la demande n'est plus en ligne."
+  already-pending: "&cTu as déjà une demande en attente vers %target%."
+  expire-sender: "&cTa demande de téléportation vers %target% a expiré."
+  expire-target: "&cLa demande de téléportation de %player% a expiré."
+  success-sender: "&a%target% a accepté ta demande de téléportation."
+  success-target: "&aTu as accepté la demande de téléportation de %player%."
+  solid-block: "&cTu dois être sur un bloc solide pour téléporter un joueur vers toi."
+  solid-block-player: "&c%player% doit être sur un bloc solide."
+  request:
+    message: "%prefix% &7%player% t'a envoyé une demande de téléportation."
+    accept: "&a&lACCEPTER&r &8- &7/&atpaccept %player%"
+    deny: "&c&lREFUSER&r &8- &7/&ctpdeny %player%"
+    accept-hover: "&7Clique ici pour accepter."
+    deny-hover: "&7Clique ici pour refuser."
+  request-sent:
+    message: "%prefix% &7Ta demande de téléportation vers %target% a été envoyée."
+    cancel: "&c&lANNULER&r &8- &7/&ctpcancel %target%"
+    cancel-hover: "&7Clique ici pour annuler."
+
+#Tpahere
+tpahere:
+  usage: "&cUtilisation invalide ! /tpahere <player>"
+
+# Tpaccept
+tpaccept:
+  usage: "&cUtilisation invalide ! /tpaccept <player>"
+  no-request: "&cTu n'as aucune demande de téléportation en attente de ce joueur."
+  sender-not-enough-tokens: "&c%player% n'a pas assez de jetons pour la téléportation."
+
+# Tpdeny
+tpdeny:
+  usage: "&cUtilisation invalide ! /tpdeny <player>"
+  no-request: "&cTu n'as aucune demande de téléportation en attente de ce joueur."
+  denied-target: "&aTu as refusé la demande de téléportation."
+  denied-sender: "&c%target% a refusé ta demande de téléportation."
+
+# Tpcancel
+tpcancel:
+  usage: "&cUtilisation invalide ! /tpcancel <player>"
+  no-request: "&cTu n'as aucune demande de téléportation en attente vers ce joueur."
+  cancelled-sender: "&aTu as annulé ta demande de téléportation vers %target%."
+  cancelled-target: "&c%player% a annulé sa demande de téléportation."
 
 # Confirm GUI (item names, title, lore)
 gui:

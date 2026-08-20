@@ -7,6 +7,7 @@ general:
   no-permission: "&cDas dörfsch ned, defür hesch kei Berächtigung."
   not-enough-tokens: "&cNed gnueg Tokens! Du bruuchsch %price% (dir fehled na %missing%)."
   invalid-number: "&cDas isch kei gültigi Zahl: %input%"
+  player-not-online: "&c%player% isch ned online oder git's ned."
 
 language:
   changed: "&aDu hesch d'Sprach uf %language% gwächslet."
@@ -46,6 +47,53 @@ sethome:
 removehome:
   usage: "&cDas gaht so ned! /removehome <name>"
   removed: "&a%home% isch erfolgriich glöscht worde! (+%price% Tokens)"
+
+# Tpa
+tpa:
+  usage: "&cDas gaht so ned! /tpa <player>"
+  sender-equal-target: "&cDu chasch dir sälber kei TPA-Aafrag schicke."
+  sender-offline: "&cDe Spieler, wo d'Aafrag gschickt het, isch ned mehr online."
+  already-pending: "&cDu hesch scho e offeni Aafrag a %target%."
+  expire-sender: "&cDini TPA-Aafrag a %target% isch abgloffe."
+  expire-target: "&cD'TPA-Aafrag vom %player% isch abgloffe."
+  success-sender: "&a%target% het dini TPA-Aafrag akzeptiert."
+  success-target: "&aDu hesch d'TPA-Aafrag vom %player% akzeptiert."
+  solid-block: "&cDu muesch uf emene feste Block stah, für dass en Spieler zu dir chan teleportiert werde."
+  solid-block-player: "&c%player% muess uf emene feste Block stah."
+  request:
+    message: "%prefix% &7%player% het dir e TPA-Aafrag gschickt."
+    accept: "&a&lAKZEPTIERE&r &8- &7/&atpaccept %player%"
+    deny: "&c&lABLEHNE&r &8- &7/&ctpdeny %player%"
+    accept-hover: "&7Da drücke zum akzeptiere."
+    deny-hover: "&7Da drücke zum ablehne."
+  request-sent:
+    message: "%prefix% &7Dini TPA-Aafrag a %target% isch gschickt worde."
+    cancel: "&c&lABBRÄCHE&r &8- &7/&ctpcancel %target%"
+    cancel-hover: "&7Da drücke zum abbräche."
+
+#Tpahere
+tpahere:
+  usage: "&cDas gaht so ned! /tpahere <player>"
+
+# Tpaccept
+tpaccept:
+  usage: "&cDas gaht so ned! /tpaccept <player>"
+  no-request: "&cDu hesch kei offeni TPA-Aafrag vo däm Spieler."
+  sender-not-enough-tokens: "&c%player% het ned gnueg Tokens für d'Teleportation."
+
+# Tpdeny
+tpdeny:
+  usage: "&cDas gaht so ned! /tpdeny <player>"
+  no-request: "&cDu hesch kei offeni TPA-Aafrag vo däm Spieler."
+  denied-target: "&aDu hesch d'TPA-Aafrag abgleent."
+  denied-sender: "&c%target% het dini TPA-Aafrag abgleent."
+
+# Tpcancel
+tpcancel:
+  usage: "&cDas gaht so ned! /tpcancel <player>"
+  no-request: "&cDu hesch kei offeni TPA-Aafrag a däm Spieler."
+  cancelled-sender: "&aDu hesch dini TPA-Aafrag a %target% abbroche."
+  cancelled-target: "&c%player% het sini TPA-Aafrag abbroche."
 
 # Confirm GUI (item names, title, lore)
 gui:
