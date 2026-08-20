@@ -1,0 +1,116 @@
+# ═══════════════════════════════════════════
+#  CyberInfra — Language file (en_PT, Pirate Speak)
+# ═══════════════════════════════════════════
+
+# Shared across multiple commands
+general:
+  no-permission: "&cYe don't have permission to be doin' that, ye scurvy dog."
+  not-enough-tokens: "&cNot enough doubloons! Ye need %price% (ye be missin' %missing%)."
+  invalid-number: "&cThat be no proper number, matey: %input%"
+  player-not-online: "&c%player% be not on deck or don't exist, arrr."
+
+language:
+  changed: "&aYe've changed yer tongue to %language%."
+  invalid: "&cThat tongue don't exist, ye landlubber."
+
+# Token system (craft / deposit / /token)
+token:
+  crafted: "&aYe crafted %amount% doubloons."
+  deposited-one: "&aYe stashed 1 doubloon in the chest."
+  deposited-many: "&aYe stashed %amount% doubloons in the chest."
+  balance: "&aYe be holdin' %amount% doubloons."
+  balance-other: "&a%player% be holdin' %amount% doubloons."
+  usage-invalid: "&cThat be no proper usage! Try /token info|set|add|remove <player> [amount]"
+  usage-sub: "&cUsage: /token %sub% <player> <amount>"
+  action-done: "&a%action% be done fer %player% (%amount%)."
+
+# Withdraw
+withdraw:
+  usage: "&cUsage: /withdraw <amount>"
+  not-positive: "&cThe sum must be more than nothin', ye scallywag."
+  no-space: "&cYe don't have enough doubloons or room in yer hold!"
+  success: "&aWithdrew %amount% doubloons. Chest holds: %remaining%"
+
+# Home — teleport (/home)
+home:
+  usage: "&cThat be no proper usage! Use /home <Home>"
+  not-existing: "&c%home% be nowhere to be found!"
+  teleported: "&aArrr, ye be teleported to %home% safe and sound."
+
+# Sethome
+sethome:
+  usage: "&cThat be no proper usage! /sethome <name>"
+  max-reached: "&cYe've reached the max number o' harbors, no more room in the fleet!"
+  created: "&a%home% be charted on the map! (-%price% doubloons)"
+
+# Removehome
+removehome:
+  usage: "&cThat be no proper usage! /removehome <name>"
+  removed: "&a%home% be scrubbed off the map! (+%price% doubloons)"
+
+# Tpa
+tpa:
+  usage: "&cThat be no proper usage! /tpa <player>"
+  sender-equal-target: "&cYe can't be sendin' a summons to yer own self, ye barnacle."
+  sender-offline: "&cThe scallywag who sent the summons has jumped ship."
+  already-pending: "&cYe already have a summons waitin' fer %target%."
+  expire-sender: "&cYer summons to %target% has gone adrift and expired."
+  expire-target: "&cThe summons from %player% has gone adrift and expired."
+  success-sender: "&a%target% accepted yer summons, all hands aboard!"
+  success-target: "&aYe accepted %player%'s summons, all hands aboard!"
+  solid-block: "&cYe need to be standin' on solid deck to summon a mate to ye."
+  solid-block-player: "&c%player% needs to be standin' on solid deck."
+  request:
+    message: "%prefix% &7%player% has sent ye a summons."
+    accept: "&a&lACCEPT&r &8- &7/&atpaccept %player%"
+    deny: "&c&lDENY&r &8- &7/&ctpdeny %player%"
+    accept-hover: "&7Click here to accept the summons."
+    deny-hover: "&7Click here to deny the summons."
+  request-sent:
+    message: "%prefix% &7Yer summons to %target% has set sail."
+    cancel: "&c&lCANCEL&r &8- &7/&ctpcancel %target%"
+    cancel-hover: "&7Click here to call it off."
+
+#Tpahere
+tpahere:
+  usage: "&cThat be no proper usage! /tpahere <player>"
+
+# Tpaccept
+tpaccept:
+  usage: "&cThat be no proper usage! /tpaccept <player>"
+  no-request: "&cYe have no summons waitin' from that scallywag."
+  sender-not-enough-tokens: "&c%player% don't have enough doubloons fer the voyage."
+
+# Tpdeny
+tpdeny:
+  usage: "&cThat be no proper usage! /tpdeny <player>"
+  no-request: "&cYe have no summons waitin' from that scallywag."
+  denied-target: "&aYe denied the summons."
+  denied-sender: "&c%target% denied yer summons."
+
+# Tpcancel
+tpcancel:
+  usage: "&cThat be no proper usage! /tpcancel <player>"
+  no-request: "&cYe have no summons waitin' fer that scallywag."
+  cancelled-sender: "&aYe called off yer summons to %target%."
+  cancelled-target: "&c%player% called off their summons."
+
+# Confirm GUI (item names, title, lore)
+gui:
+  title-set: "&fConfirm ye want to chart home &a%home%&f?"
+  title-override: "&fConfirm ye want to overwrite home &a%home%&f?"
+  title-remove: "&fConfirm ye want to scrub home &a%home%&f?"
+  title-teleport: "&fSet sail to home &a%home%&f?"
+  window-title: "&8Confirmation, arrr"
+  message-set: "&7Ye need to pay %price% doubloons to chart this home."
+  message-override: "&7Ye need to pay %price% doubloons to overwrite this home."
+  message-remove: "&7Ye get %price% doubloons back fer scrubbin' this home."
+  message-teleport: "&7Confirm settin' sail to home."
+  label-costs: "&fCost: &a%price%"
+  label-refund: "&fBooty back: &a%price%"
+  confirm: "&aAye"
+  cancel: "&cNay"
+  world: "&7World: &f%world%"
+  coord-x: "&7x: &f%x%"
+  coord-y: "&7y: &f%y%"
+  coord-z: "&7z: &f%z%"

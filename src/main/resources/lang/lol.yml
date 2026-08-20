@@ -1,0 +1,116 @@
+# ═══════════════════════════════════════════
+#  CyberInfra — Language file (lol_US, LOLCAT)
+# ═══════════════════════════════════════════
+
+# Shared across multiple commands
+general:
+  no-permission: "&cU has no permishuns 2 do dat, silly hooman."
+  not-enough-tokens: "&cNot enuf tokens! U need %price% (u is missin %missing%)."
+  invalid-number: "&cDat not numbr, %input% is confuzzling."
+  player-not-online: "&c%player% not onlyne or not exist, mystery."
+
+language:
+  changed: "&aU has chanjed langwij 2 %language%. gud jorb."
+  invalid: "&cDat langwij not reel, u maded it up."
+
+# Token system (craft / deposit / /token)
+token:
+  crafted: "&aU crafted %amount% Tokens, so shiny."
+  deposited-one: "&aU has depositz 1 token in teh box."
+  deposited-many: "&aU has depositz %amount% Tokens in teh box."
+  balance: "&aU has %amount% tokens, much wealf."
+  balance-other: "&a%player% has %amount% tokens, dey rich."
+  usage-invalid: "&cDat not rite way 2 do! Do /token info|set|add|remove <player> [amount]"
+  usage-sub: "&cHow 2 do: /token %sub% <player> <amount>"
+  action-done: "&a%action% did 4 %player% (%amount%). success."
+
+# Withdraw
+withdraw:
+  usage: "&cHow 2 do: /withdraw <amount>"
+  not-positive: "&cNumbr must b more dan zero, silly."
+  no-space: "&cU not has enuf tokens or no room in bag!"
+  success: "&aTook out %amount% tokens. U has left: %remaining%"
+
+# Home — teleport (/home)
+home:
+  usage: "&cDat not rite way 2 do! Do /home <Home>"
+  not-existing: "&c%home% not reel, doesnt exist!"
+  teleported: "&aZoooop, u is now at %home%. magic."
+
+# Sethome
+sethome:
+  usage: "&cDat not rite way 2 do! /sethome <name>"
+  max-reached: "&cU has too many homez alreddy, no moar room!"
+  created: "&a%home% is maded! (-%price% tokens) gud jorb"
+
+# Removehome
+removehome:
+  usage: "&cDat not rite way 2 do! /removehome <name>"
+  removed: "&a%home% is gon now, poof! (+%price% tokens)"
+
+# Tpa
+tpa:
+  usage: "&cDat not rite way 2 do! /tpa <player>"
+  sender-equal-target: "&cU can not send teleportz 2 urself, dat silly."
+  sender-offline: "&cTeh hooman who send teleportz is gon, poof."
+  already-pending: "&cU alreddy has teleportz waiting 4 %target%."
+  expire-sender: "&cUr teleportz 2 %target% is expired, sad."
+  expire-target: "&cTeleportz frum %player% is expired, sad."
+  success-sender: "&a%target% sayed yes 2 ur teleportz! yay."
+  success-target: "&aU sayed yes 2 %player% teleportz! yay."
+  solid-block: "&cU must stand on hard block 2 make hooman come 2 u."
+  solid-block-player: "&c%player% must stand on hard block."
+  request:
+    message: "%prefix% &7%player% send u teleportz reqwest."
+    accept: "&a&lYES PLZ&r &8- &7/&atpaccept %player%"
+    deny: "&c&lNO PLZ&r &8- &7/&ctpdeny %player%"
+    accept-hover: "&7Clik heer 4 say yes."
+    deny-hover: "&7Clik heer 4 say no."
+  request-sent:
+    message: "%prefix% &7Ur teleportz 2 %target% is sended."
+    cancel: "&c&lSTAHP&r &8- &7/&ctpcancel %target%"
+    cancel-hover: "&7Clik heer 4 stahp."
+
+#Tpahere
+tpahere:
+  usage: "&cDat not rite way 2 do! /tpahere <player>"
+
+# Tpaccept
+tpaccept:
+  usage: "&cDat not rite way 2 do! /tpaccept <player>"
+  no-request: "&cU has no teleportz waiting frum dat hooman."
+  sender-not-enough-tokens: "&c%player% not has enuf tokens 4 teleportz."
+
+# Tpdeny
+tpdeny:
+  usage: "&cDat not rite way 2 do! /tpdeny <player>"
+  no-request: "&cU has no teleportz waiting frum dat hooman."
+  denied-target: "&aU sayed no 2 teleportz."
+  denied-sender: "&c%target% sayed no 2 ur teleportz. sad."
+
+# Tpcancel
+tpcancel:
+  usage: "&cDat not rite way 2 do! /tpcancel <player>"
+  no-request: "&cU has no teleportz waiting 4 dat hooman."
+  cancelled-sender: "&aU stahped ur teleportz 2 %target%."
+  cancelled-target: "&c%player% stahped dey teleportz."
+
+# Confirm GUI (item names, title, lore)
+gui:
+  title-set: "&fU sur u wants 2 maek home &a%home%&f?"
+  title-override: "&fU sur u wants 2 overwrite home &a%home%&f?"
+  title-remove: "&fU sur u wants 2 remuv home &a%home%&f?"
+  title-teleport: "&fZoop 2 home &a%home%&f?"
+  window-title: "&8U sur?"
+  message-set: "&7U must pay %price% tokens 2 maek dis home."
+  message-override: "&7U must pay %price% tokens 2 overwrite dis home."
+  message-remove: "&7U get %price% tokens back 4 remuving dis home."
+  message-teleport: "&7U sur u wants 2 zoop 2 home."
+  label-costs: "&fCost: &a%price%"
+  label-refund: "&fGiv bak: &a%price%"
+  confirm: "&aYES"
+  cancel: "&cNO"
+  world: "&7Wurld: &f%world%"
+  coord-x: "&7x: &f%x%"
+  coord-y: "&7y: &f%y%"
+  coord-z: "&7z: &f%z%"

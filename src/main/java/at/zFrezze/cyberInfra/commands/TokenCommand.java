@@ -45,12 +45,13 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
             }
 
             OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+            String targetName = target.getName() != null ? target.getName() : args[1];
 
             switch (args[0].toLowerCase()) {
 
                 case "info" -> {
                     int amount = playerManager.getToken(target.getUniqueId());
-                    Bukkit.getLogger().info(target.getName() + " has " + amount + " tokens.");
+                    Bukkit.getLogger().info(targetName + " has " + amount + " tokens.");
                 }
 
                 case "set", "add", "remove" -> {
@@ -68,7 +69,7 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
                         case "add" -> playerManager.addToken(target.getUniqueId(), amount);
                         case "remove" -> playerManager.removeToken(target.getUniqueId(), amount);
                     }
-                    Bukkit.getLogger().info(args[0].toLowerCase() + " done for " + target.getName() + " (" + amount + ").");
+                    Bukkit.getLogger().info(args[0].toLowerCase() + " done for " + targetName + " (" + amount + ").");
                 }
 
                 default ->
@@ -96,10 +97,11 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
             case "info" -> {
                 if (args.length >= 2 && player.hasPermission("ci.tokens.others")) {
                     OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+                    String targetName = target.getName() != null ? target.getName() : args[1];
                     int amount = playerManager.getToken(target.getUniqueId());
                     player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_BALANCE_OTHER,
                             Map.of(
-                                    "player", target.getName(),
+                                    "player", targetName,
                                     "amount", String.valueOf(amount)
                     ), cp.getLanguage()));
                 } else {
@@ -124,6 +126,7 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
                     return true;
                 }
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+                String targetName = target.getName() != null ? target.getName() : args[1];
                 switch (args[0].toLowerCase()) {
                     case "set" -> playerManager.setToken(target.getUniqueId(), amount);
                     case "add" -> playerManager.addToken(target.getUniqueId(), amount);
@@ -131,7 +134,7 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
                 }
                 player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_ACTION_DONE, Map.of(
                         "action", args[0].toLowerCase(),
-                        "player", target.getName(),
+                        "player", targetName,
                         "amount", String.valueOf(amount)), cp.getLanguage()));
             }
 

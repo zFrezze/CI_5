@@ -16,7 +16,7 @@ public class ConfigManager {
     private final CyberInfra main;
     private final String defaultLanguage;
     private final Map<String, YamlConfiguration> languages = new HashMap<>();
-    private final List<String> availableLanguages = List.of("en", "de", "at", "ch", "es", "fr");
+    private final List<String> availableLanguages = List.of("en", "de", "at", "ch", "es", "fr", "");
 
     public ConfigManager(CyberInfra main) {
         this.defaultLanguage = main.getConfig().getString("language");

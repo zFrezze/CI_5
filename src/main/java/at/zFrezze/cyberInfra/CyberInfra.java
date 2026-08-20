@@ -36,6 +36,8 @@ public final class CyberInfra extends JavaPlugin {
         saveResource("lang/fr.yml", false);
         saveResource("lang/es.yml", false);
         saveResource("lang/ch.yml", false);
+        saveResource("lang/pt.yml", false);
+        saveResource("lang/lol.yml", false);
 
 
         configManager = new ConfigManager(this);
@@ -184,7 +186,7 @@ public final class CyberInfra extends JavaPlugin {
         }
 
         List<String> languages = List.of(
-                "en", "de", "at", "ch", "fr", "es"
+                "en", "de", "at", "ch", "fr", "es", "pt", "lol"
         );
 
         for (String language : languages) {

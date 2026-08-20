@@ -7,6 +7,7 @@ import at.zFrezze.cyberInfra.data.CustomPlayer;
 import at.zFrezze.cyberInfra.data.PendingHome;
 import at.zFrezze.cyberInfra.data.PlayerManager;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -49,7 +50,7 @@ public class ConfirmGUI {
         CustomPlayer cp = playerManager.get(player.getUniqueId());
         if (cp == null) return;
 
-        Component windowTitle = configManager.getMessage(ConfigMessage.CONFIRMGUI_WINDOW_TITLE, cp.getLanguage());
+        Component windowTitle = configManager.getMessage(ConfigMessage.CONFIRMGUI_WINDOW_TITLE, cp.getLanguage()).decoration(TextDecoration.ITALIC, false);
 
         ConfirmHolder holder = new ConfirmHolder();
         Inventory inv = Bukkit.createInventory(holder, 27, windowTitle);
@@ -62,15 +63,15 @@ public class ConfirmGUI {
 
         ItemStack confirm = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
         ItemMeta confirmMeta = confirm.getItemMeta();
-        confirmMeta.displayName(configManager.getMessage(ConfigMessage.CONFIRMGUI_CONFIRM, cp.getLanguage()));
-        confirmMeta.lore(List.of(configManager.getMessage(homeActions.getMessage(), Map.of("price", String.valueOf(price)), cp.getLanguage())));
+        confirmMeta.displayName(configManager.getMessage(ConfigMessage.CONFIRMGUI_CONFIRM, cp.getLanguage()).decoration(TextDecoration.ITALIC, false));
+        confirmMeta.lore(List.of(configManager.getMessage(homeActions.getMessage(), Map.of("price", String.valueOf(price)), cp.getLanguage()).decoration(TextDecoration.ITALIC, false)));
         confirm.setItemMeta(confirmMeta);
 
         inv.setItem(11, confirm);
 
         ItemStack cancel = new ItemStack(Material.RED_STAINED_GLASS_PANE);
         ItemMeta cancelMeta = cancel.getItemMeta();
-        cancelMeta.displayName(configManager.getMessage(ConfigMessage.CONFIRMGUI_CANCEL, cp.getLanguage()));
+        cancelMeta.displayName(configManager.getMessage(ConfigMessage.CONFIRMGUI_CANCEL, cp.getLanguage()).decoration(TextDecoration.ITALIC, false));
         cancel.setItemMeta(cancelMeta);
 
         inv.setItem(15, cancel);
@@ -79,14 +80,14 @@ public class ConfirmGUI {
 
         ItemStack home = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) home.getItemMeta();
-        meta.displayName(configManager.getMessage(homeActions.getTitle(), Map.of("home", homeName), cp.getLanguage()));
+        meta.displayName(configManager.getMessage(homeActions.getTitle(), Map.of("home", homeName), cp.getLanguage()).decoration(TextDecoration.ITALIC, false));
         meta.lore(List.of(
-                configManager.getMessage(homeActions.getPriceLabel(), Map.of("price", String.valueOf(price)), cp.getLanguage()),
+                configManager.getMessage(homeActions.getPriceLabel(), Map.of("price", String.valueOf(price)), cp.getLanguage()).decoration(TextDecoration.ITALIC, false),
                 Component.empty(),
-                configManager.getMessage(ConfigMessage.CONFIRMGUI_WORLD, Map.of("world", world), cp.getLanguage()),
-                configManager.getMessage(ConfigMessage.CONFIRMGUI_COORD_X, Map.of("x", String.valueOf(x)), cp.getLanguage()),
-                configManager.getMessage(ConfigMessage.CONFIRMGUI_COORD_Y, Map.of("y", String.valueOf(y)), cp.getLanguage()),
-                configManager.getMessage(ConfigMessage.CONFIRMGUI_COORD_Z, Map.of("z", String.valueOf(z)), cp.getLanguage())
+                configManager.getMessage(ConfigMessage.CONFIRMGUI_WORLD, Map.of("world", world), cp.getLanguage()).decoration(TextDecoration.ITALIC, false),
+                configManager.getMessage(ConfigMessage.CONFIRMGUI_COORD_X, Map.of("x", String.valueOf(x)), cp.getLanguage()).decoration(TextDecoration.ITALIC, false),
+                configManager.getMessage(ConfigMessage.CONFIRMGUI_COORD_Y, Map.of("y", String.valueOf(y)), cp.getLanguage()).decoration(TextDecoration.ITALIC, false),
+                configManager.getMessage(ConfigMessage.CONFIRMGUI_COORD_Z, Map.of("z", String.valueOf(z)), cp.getLanguage()).decoration(TextDecoration.ITALIC, false)
         ));
 
         PlayerProfile profile = Bukkit.createPlayerProfile(UUID.randomUUID());
