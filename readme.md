@@ -4,6 +4,7 @@
 
 **A feature-rich survival economy plugin for Paper — tokens, homes, teleports & full multi-language support.**
 
+[![Code Quality](https://img.shields.io/badge/Code_Quality-A-brightgreen?style=for-the-badge)](https://github.com/zFrezze/CI_5)
 [![Paper](https://img.shields.io/badge/Paper-1.21-0099ff?style=for-the-badge&logo=minecraft&logoColor=white)](https://papermc.io/)
 [![Java](https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/)
 [![SQLite](https://img.shields.io/badge/SQLite-local-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
