@@ -90,11 +90,6 @@ public class TpaManager {
         target.sendMessage(targetMessageDeny);
     }
 
-    public boolean hasOpenTpa(Player target) {
-        List<TpaRequest> list = requests.get(target.getUniqueId());
-        return list != null && !list.isEmpty();
-    }
-
     public TpaRequest removeRequest(UUID target, UUID senderUuid) {
         List<TpaRequest> list = requests.get(target);
         if (list == null) return null;
@@ -106,6 +101,18 @@ public class TpaManager {
                 if (list.isEmpty()) {
                     requests.remove(target);
                 }
+                return request;
+            }
+        }
+        return null;
+    }
+
+    public TpaRequest getRequest(UUID target, UUID senderUuid) {
+        List<TpaRequest> list = requests.get(target);
+        if (list == null) return null;
+
+        for (TpaRequest request : list) {
+            if (request.getSender().equals(senderUuid)) {
                 return request;
             }
         }

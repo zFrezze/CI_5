@@ -5,6 +5,7 @@ import at.zFrezze.cyberInfra.config.ConfigMessage;
 import at.zFrezze.cyberInfra.data.CustomPlayer;
 import at.zFrezze.cyberInfra.data.PlayerManager;
 import at.zFrezze.cyberInfra.data.TpaManager;
+import at.zFrezze.cyberInfra.data.TpaType;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -54,7 +55,7 @@ public class TpaCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        tpaManager.sendTpa(player, target);
+        tpaManager.sendTpa(player, target, TpaType.NORMAL);
 
         return true;
     }

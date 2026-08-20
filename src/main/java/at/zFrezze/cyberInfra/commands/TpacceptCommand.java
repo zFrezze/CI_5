@@ -3,10 +3,7 @@ package at.zFrezze.cyberInfra.commands;
 import at.zFrezze.cyberInfra.CyberInfra;
 import at.zFrezze.cyberInfra.config.ConfigManager;
 import at.zFrezze.cyberInfra.config.ConfigMessage;
-import at.zFrezze.cyberInfra.data.CustomPlayer;
-import at.zFrezze.cyberInfra.data.PlayerManager;
-import at.zFrezze.cyberInfra.data.TpaManager;
-import at.zFrezze.cyberInfra.data.TpaRequest;
+import at.zFrezze.cyberInfra.data.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -22,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class TpacceptCommand implements CommandExecutor, TabCompleter {
 
@@ -61,31 +59,40 @@ public class TpacceptCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        CustomPlayer cpSender = playerManager.get(tpaSender.getUniqueId());
-        if (cpSender == null) return true;
-
-        Block blockBelow = player.getLocation().clone().subtract(0, 1, 0).getBlock();
-        if (!blockBelow.isSolid()) {
-            player.sendActionBar(configManager.getMessage(ConfigMessage.TPA_SOLID_BlOCK, cp.getLanguage()));
-            tpaSender.sendActionBar(configManager.getMessage(ConfigMessage.TPA_SOLID_BLOCK_PLAYER, Map.of("player", player.getName()), cpSender.getLanguage()));
-            return true;
-        }
-
-        TpaRequest request = tpaManager.removeRequest(player.getUniqueId(), tpaSender.getUniqueId());
+        TpaRequest request = tpaManager.getRequest(player.getUniqueId(), tpaSender.getUniqueId());
         if (request == null) {
             player.sendActionBar(configManager.getMessage(ConfigMessage.TPACCEPT_NO_PENDING_REQUEST, cp.getLanguage()));
             return true;
         }
 
-        int price = main.getConfig().getInt("tpa.price");
-        if (cpSender.getToken() < price) {
-            player.sendActionBar(configManager.getMessage(ConfigMessage.TPACCEPT_SENDER_NOT_ENOUGH_TOKENS,
-                    Map.of("player", tpaSender.getName()), cp.getLanguage()));
+        Player teleported  = (request.getTpaType() == TpaType.NORMAL) ? tpaSender : player;
+        Player landingSpot = (request.getTpaType() == TpaType.NORMAL) ? player : tpaSender;
+
+        Block blockBelow = landingSpot.getLocation().clone().subtract(0, 1, 0).getBlock();
+        if (!blockBelow.isSolid()) {
+            player.sendActionBar(configManager.getMessage(ConfigMessage.TPA_SOLID_BlOCK, cp.getLanguage()));
+            tpaSender.sendActionBar(configManager.getMessage(ConfigMessage.TPA_SOLID_BLOCK_PLAYER, Map.of("player", player.getName()), cp.getLanguage()));
             return true;
         }
 
-        playerManager.removeToken(tpaSender.getUniqueId(), price);
-        tpaSender.teleport(player);
+        CustomPlayer cpTeleported = playerManager.get(teleported.getUniqueId());
+        if (cpTeleported == null) return true;
+
+        int price = main.getConfig().getInt("tpa.price");
+        if (cpTeleported.getToken() < price) {
+            player.sendActionBar(configManager.getMessage(ConfigMessage.TPACCEPT_SENDER_NOT_ENOUGH_TOKENS,
+                    Map.of("player", teleported.getName()), cp.getLanguage()));
+            return true;
+        }
+
+        tpaManager.removeRequest(player.getUniqueId(), tpaSender.getUniqueId());
+
+        if (request.getTpaType() == TpaType.NORMAL) {
+            tpaSender.teleport(player);
+        } else {
+            player.teleport(tpaSender);
+        }
+        playerManager.removeToken(teleported.getUniqueId(), price);
 
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
         tpaSender.playSound(tpaSender.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
@@ -93,7 +100,7 @@ public class TpacceptCommand implements CommandExecutor, TabCompleter {
         player.sendActionBar(configManager.getMessage(ConfigMessage.TPA_SUCCESS_TARGET,
                 Map.of("player", tpaSender.getName()), cp.getLanguage()));
         tpaSender.sendActionBar(configManager.getMessage(ConfigMessage.TPA_SUCCESS_SENDER,
-                Map.of("target", player.getName()), cpSender.getLanguage()));
+                Map.of("target", player.getName()), cpTeleported.getLanguage()));
 
         return true;
     }

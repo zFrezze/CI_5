@@ -21,6 +21,7 @@ commands:
   tpaccept:
   tpdeny:
   tpcancel:
+  tpahere:
 permissions:
   ci.admin:
     description: Full admin access

@@ -118,6 +118,10 @@ public final class CyberInfra extends JavaPlugin {
         getCommand("tpcancel").setExecutor(tpcancelCommand);
         getCommand("tpcancel").setTabCompleter(tpcancelCommand);
 
+        TpahereCommand tpahereCommand = new TpahereCommand(configManager, playerManager, tpaManager);
+        getCommand("tpahere").setExecutor(tpahereCommand);
+        getCommand("tpahere").setTabCompleter(tpahereCommand);
+
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> playerManager.saveAll(), 2400L, 2400L);
     }
 
