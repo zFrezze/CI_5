@@ -59,7 +59,7 @@ public class SethomeCommand implements CommandExecutor {
         }
 
         boolean isOverride = cp.getHome(name) != null;
-        boolean isVip = player.hasPermission("home.vip");
+        boolean isVip = player.hasPermission("ci.home.vip") || player.hasPermission("ci.homes.vip");
 
         int maxHomes = isVip ? main.getConfig().getInt("homes.max-homes.vip") : main.getConfig().getInt("homes.max-homes.default");
 

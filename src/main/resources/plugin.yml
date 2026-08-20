@@ -2,6 +2,7 @@ name: CyberInfra
 version: '1.0-SNAPSHOT'
 main: at.zFrezze.cyberInfra.CyberInfra
 api-version: '1.21'
+
 commands:
   token:
     description: Manage player tokens
@@ -10,28 +11,122 @@ commands:
   withdraw:
     description: Withdraw tokens from your balance
     usage: /withdraw <amount>
-    aliases: wd
+    aliases: [wd]
   sethome:
+    description: Set a home at your location
+    usage: /sethome <name>
   removehome:
+    description: Remove one of your homes
+    usage: /removehome <name>
   home:
+    description: Teleport to one of your homes
+    usage: /home <name>
   language:
     description: Change your language
     usage: /language [lang]
+    aliases: [lang]
   tpa:
+    description: Ask to teleport to a player
+    usage: /tpa <player>
   tpaccept:
+    description: Accept an incoming teleport request
+    usage: /tpaccept <player>
   tpdeny:
+    description: Deny an incoming teleport request
+    usage: /tpdeny <player>
   tpcancel:
+    description: Cancel a teleport request you sent
+    usage: /tpcancel <player>
   tpahere:
+    description: Ask a player to teleport to you
+    usage: /tpahere <player>
+
 permissions:
+  # ── Admin ─────────────────────────────
   ci.admin:
     description: Full admin access
     default: op
-  ci.tokens.admin:
+
+  # ── Tokens ────────────────────────────
+  ci.token.use:
+    description: Use /token and /withdraw
+    default: true
+  ci.token.admin:
     description: Manage tokens (set/add/remove)
     default: op
-  ci.tokens.others:
-    description: View other players' tokens
+  ci.token.others:
+    description: View other players' token balances
     default: op
+
+  # ── Withdraw ──────────────────────────
+  ci.withdraw.use:
+    description: Withdraw tokens into items
+    default: true
+
+  # ── Homes ─────────────────────────────
+  ci.home.use:
+    description: Teleport to your homes
+    default: true
+  ci.sethome.use:
+    description: Set homes
+    default: true
+  ci.removehome.use:
+    description: Remove your homes
+    default: true
+  ci.home.vip:
+    description: Grants the higher VIP home limit
+    default: false
   ci.homes.admin:
-    description: Allows /home for other players
+    description: Use /home for other players
     default: op
+
+  # ── Confirm GUI ───────────────────────
+  ci.confirm:
+    description: Use the confirmation GUI
+    default: true
+
+  # ── Language ──────────────────────────
+  ci.language.use:
+    description: Change your language
+    default: true
+  ci.language.en:
+    description: Select English
+    default: true
+  ci.language.de:
+    description: Select German
+    default: true
+  ci.language.at:
+    description: Select Austrian German
+    default: true
+  ci.language.ch:
+    description: Select Swiss German
+    default: true
+  ci.language.fr:
+    description: Select French
+    default: true
+  ci.language.es:
+    description: Select Spanish
+    default: true
+  ci.language.pirate:
+    description: Select Pirate speak
+    default: true
+  ci.language.cat:
+    description: Select Cat speak
+    default: true
+
+  # ── Teleport requests ─────────────────
+  ci.tpa.use:
+    description: Send teleport requests
+    default: true
+  ci.tpaccept.use:
+    description: Accept teleport requests
+    default: true
+  ci.tpahere.use:
+    description: Request a player to teleport to you
+    default: true
+  ci.tpdeny.use:
+    description: Deny teleport requests
+    default: true
+  ci.tpcancel.use:
+    description: Cancel teleport requests you sent
+    default: true

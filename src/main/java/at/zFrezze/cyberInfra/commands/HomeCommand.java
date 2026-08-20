@@ -43,7 +43,7 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
         CustomPlayer cp = playerManager.get(player.getUniqueId());
         if (cp == null) return true;
 
-        if (!player.hasPermission("ci.home.use")) {
+        if (!(player.hasPermission("ci.home.use") || player.hasPermission("ci.homes.use"))) {
             player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_NO_PERMISSION, cp.getLanguage()));
             return true;
         }

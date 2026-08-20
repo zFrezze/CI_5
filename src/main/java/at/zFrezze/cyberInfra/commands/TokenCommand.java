@@ -23,7 +23,8 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
     private final PlayerManager playerManager;
     private final ConfigManager configManager;
 
-    public TokenCommand(PlayerManager playerManager, ConfigManager configManager) {this.playerManager = playerManager;
+    public TokenCommand(PlayerManager playerManager, ConfigManager configManager) {
+        this.playerManager = playerManager;
         this.configManager = configManager;
     }
 
@@ -79,6 +80,7 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
         }
 
         CustomPlayer cp = playerManager.get(player.getUniqueId());
+        if (cp == null) return true;
 
         if (!player.hasPermission("ci.token.use")) {
             player.sendActionBar(configManager.getMessage(ConfigMessage.GENERAL_NO_PERMISSION, cp.getLanguage()));
@@ -95,7 +97,7 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
         switch (args[0].toLowerCase()) {
 
             case "info" -> {
-                if (args.length >= 2 && player.hasPermission("ci.tokens.others")) {
+                if (args.length >= 2 && player.hasPermission("ci.token.others")) {
                     OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
                     String targetName = target.getName() != null ? target.getName() : args[1];
                     int amount = playerManager.getToken(target.getUniqueId());
@@ -103,7 +105,7 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
                             Map.of(
                                     "player", targetName,
                                     "amount", String.valueOf(amount)
-                    ), cp.getLanguage()));
+                            ), cp.getLanguage()));
                 } else {
                     int amount = playerManager.getToken(player.getUniqueId());
                     player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_BALANCE,
@@ -139,7 +141,7 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
             }
 
             default -> {
-                boolean isAdmin = player.hasPermission("ci.admin") || player.hasPermission("ci.tokens.admin");
+                boolean isAdmin = player.hasPermission("ci.admin") || player.hasPermission("ci.token.admin");
                 if (!isAdmin) {
                     int amount = playerManager.getToken(player.getUniqueId());
                     player.sendActionBar(configManager.getMessage(ConfigMessage.TOKEN_BALANCE,
@@ -155,7 +157,7 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] args) {
 
-        boolean admin = sender.hasPermission("ci.admin") || sender.hasPermission("ci.tokens.admin");
+        boolean admin = sender.hasPermission("ci.admin") || sender.hasPermission("ci.token.admin");
 
         if (args.length == 1) {
             List<String> subs = admin ? Arrays.asList("info", "set", "add", "remove") : Arrays.asList("info");
@@ -163,7 +165,7 @@ public class TokenCommand implements CommandExecutor, TabCompleter {
 
         } else if (args.length == 2) {
             boolean isAdminSub = args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("remove");
-            boolean infoOthers = args[0].equalsIgnoreCase("info") && sender.hasPermission("ci.tokens.others");
+            boolean infoOthers = args[0].equalsIgnoreCase("info") && sender.hasPermission("ci.token.others");
 
             if ((isAdminSub && admin) || infoOthers) {
                 List<String> names = new ArrayList<>();
